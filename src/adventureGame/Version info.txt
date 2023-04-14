@@ -1,0 +1,67 @@
+Version information
+
+v1.8
+Rewrite a lot of it.
+change the clues, move a few items around
+use reflection for methods
+
+v1.7.
+climb tree (climbable boolean for room == go up)
+
+v1.6
+open paper still -- done
+use hammer to break rock -- done.
+I need to separate the word that the user uses to identify an object in a room from the item name in the list.
+e.g. A rock could be rock1, rock2, rock3, but the user would just type rock.
+What about multiple keys? If there is more than one key in inventory, then need adjective, otherwise just use key
+
+how to handle special functions yet remain general for any Adventure game program?
+
+v 1.5
+finish off map,
+add items (container, activate things)
+make winning conditions
+need a way for things to be hidden -- e,g under a door, under leaves. 
+need to be able to move things (move leaves, rocks)
+get key from lake
+open paper, open package 
+
+v 1.4
+change itemlist into a hashmap too.
+add inventory. Inventory displays health and food status.
+take and drop are working
+added health and food
+light, darkness, fallign into pits also work
+
+v 1.3
+change Roomlist from an array into a hashmap for easier room handling.
+Moved setupRooms to Room class
+items improved a lot. added some to the map.
+added player, added eat function (but need to make everthing lowecase to work)
+
+
+Excercise for students:
+Write a method that will do both of these:
+
+
+	void moveLeaves() {		
+		System.out.println("You kick the leaves around. Hey, there's a shiny key in the leaves.");
+		if (! roomList.get("clearning").items.contains("key"))
+			roomList.get("clearing").items.add("key");		
+		Item it = itemList.get("leaves");
+		it.moveMethod = "";
+		itemList.put("leaves", it);
+		
+	}	
+	
+	void moveDoor() {
+		System.out.println("With great effort you move the door a few inches.\n"
+				+ "You see a small package under the door.");
+		//check if package is already in room:
+		if (! roomList.get("treasury").items.contains("package"))
+			roomList.get("treasury").items.add("package");
+		//stop door from being moved again.
+		Item it = itemList.get("door");
+		it.moveMethod = "";
+		itemList.put("door", it);
+	}

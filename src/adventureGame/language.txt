@@ -1,0 +1,70 @@
+Language parser improvements
+============================
+
+1. Single words:
+- any single word that is not on the list "I don't understand that command"
+
+- quit
+- exit
+- i
+- inventory
+- n,w,s,e,u,d, north, west, south, east, up, down
+- sleep
+- look
+- help
+- walk / run  <-- just move by writing the direction
+- search
+- pray
+
+
+2. Two words: Verb-Noun
+- check to see if verb is valid
+- check to see if noun goes with that verb.
+- if not, then "How do you ___ that"? (how do you climb that?" "There is no NOUN here")
+- now we have to run the correct method. Could use lambda? but don't know how, so large switch:
+
+- climb tree
+- read ___ (paper)
+- open ___ 
+- eat ____ (sandwich)
+- examine _____
+- lookat _____
+- pickup _____
+- take ____
+- drop ____    drop all
+- use ____
+- pull _____ (lever)
+- kick _____ (leaves)
+- throw knife
+- please help
+- take all
+- turn on flashlight
+- switch on flashlight
+- turn off flashlight (not needed)
+
+
+3. Three words.
+Unusual. One seems to be a direction, one seems to be a noun in the location
+- climb up tree [ climb up --> climb]  
+- climb down tree [climb down -> down]
+- pull lever down
+- pick up rock [ pick up --> take]
+- reach into water [search] [search water]
+- look under carpet
+
+4. Four words: verb noun preposition noun
+- first make sure both nouns are items that are present
+
+examples:
+- take emerald from chest
+- put knife into chest
+- put hand in water
+- give A to B
+- attack troll with sword [wield sword, attack troll]
+- hit/smash rock with hammer
+- use hammer on door
+- use hammer to break rock [remove word "to"] (if there are 5 words and one is "to")
+- put batteries in flashlight
+- throw knife at goblin
+
+
