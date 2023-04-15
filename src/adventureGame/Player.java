@@ -3,10 +3,7 @@ package adventureGame;
 public class Player {
 
 	/* Variables:
-	 * foodPoints: 100=too full to eat
-	 * 				0 - 20 = hungry
-	 * 				-15 - 0 = starving
-	 * 				<= 0: you starve to death. 
+	 * foodPoints: <= 0: you starve to death. 
 	 * health: max = 100;
 	 * 		0 = you die
 	 * status: healthy, asleep, broken leg, sick, poisoned, ...
@@ -15,14 +12,14 @@ public class Player {
 	private static final int HUNGRY = 35;
 	private static final int TOOFULL = 70;
 
-
+	//private? getter & setter?
 	final String name;
 	int turns = 0;
 	private int foodPoints = 50;
 	private int health = 70;
 	boolean isThirsty = false;
 	boolean isPoisoned = false;
-	private String status = "";
+	//private String status = "";
 
 	Player(String name) {
 		this.name = name;

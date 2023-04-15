@@ -50,7 +50,7 @@ class Item {
 
 	/* container related properties */
 	boolean isContainer = false;
-	String itemContained = "";
+	String itemContained = "";  //NOTE: containers can only contain 1 item!
 	String openMethod = "";    //method to be run upon opening
 	boolean isOpen = false;    //used for containers (and windows)
 	String openRequires = "";  //object needed in order to open this item
@@ -73,7 +73,7 @@ class Item {
 		return this.isActivated;
 	}
 
-	/*
+	/***************************************************************************************
 	 * Make each item in the game and add it to the list.
 	 * Also place the item in the specific room once rooms are made
 	 * (That way a room never contains an object that is not in this list.)
@@ -85,7 +85,7 @@ class Item {
 	static void setUpItems(HashMap<String,Item> itemList, HashMap<String,Room> roomList) {
 		Item z = new Item("a ham sandwich with mustard");
 		z.descrRoom = "You smell a sandwich nearby.";
-		z.foodpoints = 10;
+		z.foodpoints = 11;
 		itemList.put("sandwich",z);
 		roomList.get("path1").items.add("sandwich");
 
@@ -97,8 +97,7 @@ class Item {
 
 		z = new Item("A carefully folded piece of paper with writing on it.");
 		z.descrRoom= "Some pieces of paper have blown under a bush.";
-		z.descrRead = "To return to your world, you need to put the emerald into the silver bell"
-				+ " and then ring it inside the crystal cave.";
+		z.descrRead = "To return to your world, you need to ring the silver bell in the special location.";
 		itemList.put("paper",z);
 		roomList.get("maze2").items.add("paper");
 
@@ -165,11 +164,12 @@ class Item {
 		z = new Item("a package of lembas. Someone from Middle Earth was here.");
 		z.foodpoints = 20;
 		z.descrRoom = "A dirty package wrapped in leaves is wedged under the door.";
-		z.activatedMethod = "a_openLembas";
+		//FIXME z.activatedMethod = "a_openLembas";
 		itemList.put("package",z);
 		itemList.put("lembas",z);
 
-		z = new Item("You can't reach the glowing/shiny crystals, and,\n unfortuntately, you couldn't do anything with them even if you could.");
+		z = new Item("You can't reach the glowing/shiny crystals, and,\n"
+				+ " unfortuntately, you couldn't do anything with them even if you could.");
 		z.isCarryable = false;
 		itemList.put("crystals",z);
 		roomList.get("treasury").items.add("crystals");
@@ -213,15 +213,16 @@ class Item {
 		itemList.put("lever", z);
 		roomList.get("secret_room").items.add("lever");
 
-		z = new Item("The plaque says: \"Warning: Earthquake Generator\n\t\tAuthorized use only (for terraforming)\"");
+		z = new Item("The plaque says: \"Warning: Earthquake Generator\n"
+				+ "\t\tAuthorized use only (for terraforming)\"");
 		z.isCarryable = false;
 		z.descrRead = z.descrLook;
 		itemList.put("plaque", z);
 		roomList.get("secret_room").items.add("plaque");
 
-		z = new Item("A golden bell. It is missing a jeweler clapper.");
-		z.descrActive = "A golden bell with an emerald clapper.";
-		z.descrRoom = "A golden bell lies on the floor.";
+		z = new Item("A silver bell. It is missing a jeweler clapper.");
+		z.descrActive = "A silver bell with an emerald clapper.";
+		z.descrRoom = "A silver bell lies on the floor.";
 		itemList.put("bell", z);
 
 	}

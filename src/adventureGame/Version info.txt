@@ -1,5 +1,20 @@
 Version information
 
+TO FIX:  
+* lake is an object. Search does not take the key
+* winning should be checked elsewhere
+* package is not lembas
+* throw knife at goblin
+* flashlight needs batteries
+* put command does not work
+* doublecheck 
+	reach command 
+	smash command
+	use command
+	close command 
+
+* make southern forest with hole that drops you down to crystal cave. You get a crystal as a light.
+
 v1.8
 Rewrite a lot of it.
 change the clues, move a few items around

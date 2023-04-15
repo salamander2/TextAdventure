@@ -83,13 +83,6 @@ public class AdventureMain {
 		return text;
 	}
 
-	/* Commands that work so far:
-	GO direction, direction,
-	LOOK, QUIT
-	?, HELP
-	This will crash if the wrong number of words are entered! e.g. "look at"
-	 */
-
 	String removeArticles(String str)  {
 		str = " " + str + " ";          // add leading and trailing space
 		while (str.indexOf(" a ") != -1) {
@@ -111,13 +104,16 @@ public class AdventureMain {
 		text = text.replaceAll("pick up", "pickup");
 		text = text.replaceAll("look at", "lookat");
 		text = text.replaceAll("climb up", "climbup");
+		
+		//No. we have to allow "turn on flashlight" as well as "turn flashlight on"
+		//text = text.replaceAll("turn on", "turnon");
+		//text = text.replaceAll("turn off", "turnoff");
 
 		//pre-parsing: What about "go to"		
 		text = text.replaceAll("[^a-z0-9 ]", "");
 		text = this.removeArticles(text).trim();
 		return text;
 	}
-	
 	
 
 	boolean parseCommand(String text) {
@@ -230,6 +226,7 @@ public class AdventureMain {
 		case "move": //move an item. These are things you can't pick up.
 			moveItem(word2);
 			break;
+		//FIXME
 		case "put":  
 			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
 			//TODO: add player.update()
@@ -268,15 +265,13 @@ public class AdventureMain {
 				openStuff(word2, word3, word4);
 			}			
 			break;			
-			//		case "close":
-			//			if (word2.contains("door")) closeDoor(word2);
-			//			else closeObject(word2);
-			//			break;	
-
+		
 			/*	turn on flashlight.  turn off flashlight
 			turn flashlight on, turn flashlight off		*/
 		case "turn":
-			//TODO: update this with flashlight() method
+			//TODO: update this with activate flashlight() method
+			
+			//TODO if word2 or word3 = flashlight, then check if it is in your inventory or on the ground
 			if (word3.equals("flashlight")) {
 				if (word2.equals("on")) { 
 					itemMap.get("flashlight").setActivate(true);
@@ -291,7 +286,7 @@ public class AdventureMain {
 				}
 				if (word3.equals("off")) itemMap.get("flashlight").setActivate(false);
 			}
-			else System.out.println("Sorry, I don't understand that command");
+			else System.out.println("Sorry, I don't understand what you want to do.");
 			break;
 		case "ring":
 			ringBell(word2);
@@ -370,6 +365,9 @@ public class AdventureMain {
 		}	
 	}
 
+	//FIXME: this method returns the item in the room or inventory.
+	//It's only used once. NOT that useful - since you would still have to remove the item.
+	//Better to make it a boolean to check if it is present or not.
 	Item itemPresent(String itemName) {
 		if ((inventory.contains(itemName))) {
 			return itemMap.get(itemName);
@@ -425,6 +423,7 @@ public class AdventureMain {
 		player.update();
 	}
 
+	//Note: this method actually does the eating in the player class.
 	void eatItem(String itemname) {
 		if (itemname.equals("")){
 			System.out.println("eat what?");
@@ -474,8 +473,17 @@ public class AdventureMain {
 
 	void search() {
 		if (currentRoom.contentEquals("black_lake")) {
+			Room r = allRooms.get(currentRoom);			
 			//find key
-			player.update();
+			if (r.items.contains("key")) {			
+				r.items.remove("key");
+				System.out.println("You notice a shiny piece of metal in the water\n"
+						+ "You pick it up and add it to your inventory.");
+				inventory.add("key");
+				player.update();
+			} else {
+				System.out.println("All you see is black water.");
+			}
 			return;
 		}
 		System.out.println("Being fairly observant all you need to do is to \"look at __\". "
@@ -614,6 +622,7 @@ public class AdventureMain {
 		player.update();
 	}
 
+	//TAKE A FROM B
 	void takeObject(String itemName, String container) {
 		Room r = allRooms.get(currentRoom);
 		if (! r.items.contains(container)) {		
