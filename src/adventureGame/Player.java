@@ -37,7 +37,7 @@ public class Player {
 		if (h > 0 && h < 100) health += h;
 	}
 
-	boolean eat(Item q) {
+	boolean eat(String name, Item q) {
 		if (this.foodPoints >= TOOFULL) {
 			System.out.println("You are too full to eat more.");
 			return false;
@@ -47,6 +47,16 @@ public class Player {
 			return false;
 		}
 		this.foodPoints += q.getFoodPoints();
+		if (name.equals("lembas")) {
+			if (isPoisoned) {
+				isPoisoned = false;
+				System.out.println("You are cured from your poison.");
+			}
+			this.health += 12;
+			if (foodPoints <= STARVING) foodPoints = STARVING +6;
+			System.out.println("You feel healthier and satisfied.");
+			return true;
+		}
 		System.out.println("Mmmm... yummy.");
 		return true;
 	}

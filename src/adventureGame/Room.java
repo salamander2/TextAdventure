@@ -129,7 +129,7 @@ public class Room{
 		r= new Room("Sparkling cave",
 				"This is a huge cavern. The walls of the cave sparkle with shiny crystals. There is light to the east"
 				+ " and passages in other directions.");	
-		r.setExits("chimney", "tunnel1", "cave3", "cave1", "","tunnel1");
+		r.setExits("chimney", "tunnel1", "r_fetidCave", "cave1", "","tunnel1");
 		r.isDark = true;		
 		roomList.put("cave2", r);
 		
@@ -157,11 +157,11 @@ public class Room{
 		r = new Room("Tunnel","a slippery tunnel."
 				+ "\nAt the south end is a room whose entrance is blocked by massive iron door that is off its hinges,"
 				+ "\nbut, it looks like you can squeeze past it.");
-		r.setExits("tunnel2", "treasury","", "", "","");
+		r.setExits("tunnel2", "","", "", "","");
 		r.isDark = true;		
 		roomList.put("tunnel3", r);
 				
-		r = new Room("Dwarf treasury","centuries ago, this was the treasury of the dwarfs."
+		r = new Room("Dwarf treasury","Centuries ago, this was the treasury of the dwarfs."
 				+ "\nIt has obviously been thoroughly looted, though the ceiling is still lit by glowing crystals."
 				+ "\nYou entered from the tunnel to the west.");
 		r.setExits("", "","tunnel3", "", "","");

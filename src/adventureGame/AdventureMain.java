@@ -36,6 +36,8 @@ public class AdventureMain {
 		Room.setupRooms(allRooms);
 		Item.setUpItems(itemMap, allRooms);
 		
+		inventory.add("batteries");
+		
 		String command = "";
 		System.out.print("Please type your firstname: (press enter for \"Billy\") ");
 		String name = getCommand();
@@ -257,7 +259,7 @@ public class AdventureMain {
 			break;
 
 			//SPECIAL COMMANDS
-			//get this working for open paper and open package, maybe also open door
+			//get this working for open paper and open package
 		case "open":
 			if (word2=="") {
 				System.out.println("open what?");				
@@ -265,26 +267,12 @@ public class AdventureMain {
 				openStuff(word2, word3, word4);
 			}			
 			break;			
-		
+		case "turn":
 			/*	turn on flashlight.  turn off flashlight
 			turn flashlight on, turn flashlight off		*/
-		case "turn":
-			//TODO: update this with activate flashlight() method
-			
-			//TODO if word2 or word3 = flashlight, then check if it is in your inventory or on the ground
-			if (word3.equals("flashlight")) {
-				if (word2.equals("on")) { 
-					itemMap.get("flashlight").setActivate(true);
-					lookAtObject("flashlight");
-				}
-				if (word2.equals("off")) itemMap.get("flashlight").setActivate(false);
-			}
-			else if (word2.equals("flashlight")) {
-				if (word3.equals("on")) { 
-					itemMap.get("flashlight").setActivate(true); 
-					lookAtObject("flashlight");
-				}
-				if (word3.equals("off")) itemMap.get("flashlight").setActivate(false);
+			if (word2.equals("flashlight") || word3.equals("flashlight")) {
+				flashlight(word2, word3);
+				break;
 			}
 			else System.out.println("Sorry, I don't understand what you want to do.");
 			break;
@@ -306,14 +294,15 @@ public class AdventureMain {
 			return;
 		}
 
-		player.update();
 		 
 		//run methods for moving ... e.g. climbing the tree and falling
+		//this method must put the player in the correct room and also run player.udpate()
 		if (newRoom.substring(0, 2).equals("r_")) {			
 			runMethod(newRoom);
 			return;
 		}
 
+		player.update();
 		currentRoom = newRoom;		
 		lookAtRoom(false);		
 	}
@@ -368,6 +357,7 @@ public class AdventureMain {
 	//FIXME: this method returns the item in the room or inventory.
 	//It's only used once. NOT that useful - since you would still have to remove the item.
 	//Better to make it a boolean to check if it is present or not.
+	/*
 	Item itemPresent(String itemName) {
 		if ((inventory.contains(itemName))) {
 			return itemMap.get(itemName);
@@ -378,10 +368,18 @@ public class AdventureMain {
 		}
 		return null;
 	}
-
+	*/
+	boolean itemPresent(String itemName) {
+		if ((inventory.contains(itemName))) return true;		
+		Room r = allRooms.get(currentRoom);
+		if (r.items.contains(itemName)) return true;
+		return false;
+	}
+	
 	void lookAtObject(String itemName){
 		//is item in inventory
 		if ((inventory.contains(itemName))) {
+			
 			Item it = itemMap.get(itemName);
 
 			if (it.isActivated()) System.out.println(it.descrActive);
@@ -411,11 +409,16 @@ public class AdventureMain {
 			System.out.println("Read what?");
 			return;
 		}
-		Item z = itemPresent(itemname);
-		if (z == null) {
+		if (!itemPresent(itemname)) {
 			System.out.println("There is no '" + itemname + "' in this location, nor in your inventory.");
 			return;			
 		}
+		
+		Item z = null;
+		if ((inventory.contains(itemname))) z = itemMap.get(itemname);	
+		Room r = allRooms.get(currentRoom);
+		if (r.items.contains(itemname)) z = itemMap.get(itemname);
+		
 		if (z.descrRead.length() > 0)
 			System.out.println("The " + itemname + " says: " + z.descrRead);
 		else
@@ -432,7 +435,7 @@ public class AdventureMain {
 		//is item in current room? eat that item first.
 		Room r = allRooms.get(currentRoom);
 		if (r.items.contains(itemname)) {			
-			if (! player.eat(itemMap.get(itemname))) return;				
+			if (! player.eat(itemname, itemMap.get(itemname))) return;				
 			r.items.remove(itemname);
 			player.update();
 			return;				
@@ -440,7 +443,7 @@ public class AdventureMain {
 		//is item in inventory:
 		for (String s : inventory) {
 			if (s.equals(itemname)) {
-				if (! player.eat(itemMap.get(itemname))) return;				
+				if (! player.eat(itemname, itemMap.get(itemname))) return;				
 				inventory.remove(itemname);
 				player.update();
 				return;
@@ -746,6 +749,28 @@ public class AdventureMain {
 		}
 	}
 
+	void flashlight(String word2, String word3) {
+		boolean turnOn = false;
+		if (word2.equals("on") || word3.equals("on")) turnOn = true;
+		
+		if (! itemPresent("flashlight")) {
+			System.out.println("You don't seem to have the flashlight handy.");
+			return;
+		}
+		if (! itemPresent("batteries")) {
+			System.out.println("The flashlight requires batteries");
+			return;
+		}
+		if (turnOn) {
+				itemMap.get("flashlight").setActivate(true);
+				lookAtObject("flashlight");
+			}
+		else {
+			itemMap.get("flashlight").setActivate(false);
+		}
+		//player.update();  <-- this is in setActivate()
+	}
+	
 	//TODO: what objects get activated? (by opening?)
 	//rock: hit rock with hammer or open rock with hammer, or smash rock with hammer
 	//flashlight: activated in switch statement
@@ -753,13 +778,10 @@ public class AdventureMain {
 	//hammer
 	//bell
 	void activate(String itemName) {
-		Room r = allRooms.get(currentRoom);
 		//exit if it is not in the room and not in the inventory
-		if (! r.items.contains(itemName)) {
-			if (!(inventory.contains(itemName))) {
-				System.out.println("You don't have " + itemName + " in your inventory.");
-				return;
-			}
+		if (! itemPresent(itemName)) {
+			System.out.println("You don't have " + itemName + " in your inventory.");
+			return;
 		}
 		Item it = itemMap.get(itemName);
 		if (it.activatedMethod.equals("") && it.descrActive.equals(""))	{
@@ -791,18 +813,28 @@ public class AdventureMain {
 	}
 
 	void openObject(String itemName) {
-		//TODO: FIXME This means that you can't open things in your inventory
-
-		Room r = allRooms.get(currentRoom);
-		if (!r.items.contains(itemName)) {
+		
+		if (! itemPresent(itemName)) {
 			System.out.println("That object does not exist (here).");
 			return;
 		}
+		
 		Item it = itemMap.get(itemName);		
 		if (!it.isContainer) {
 			System.out.println("You cannot open that item.");
 			return;
 		}
+		
+		//special case for package containing lembas
+		if (inventory.contains(itemName) && itemName.equals("package")) {
+			inventory.remove(itemName);
+			//remove the item from itemMap? No. Maybe we'll need the package again one day.
+			inventory.add("lembas");
+			System.out.println("It contains lembas!");
+			player.update();
+			return;
+		}
+
 		if (it.isOpen) {
 			System.out.print("The " + itemName + " is already open ");
 			if (it.itemContained.equals("")) {
@@ -890,6 +922,7 @@ public class AdventureMain {
 		player.injury(15);
 		currentRoom = "forest1";
 		lookAtRoom(false);
+		player.update();
 	}
 
 	void getFromLake() {
@@ -920,6 +953,15 @@ public class AdventureMain {
 		allRooms.put("cave1",r);
 	}
 
+	//this allows an exit to the treasury once the door is moved.
+	void moveTreasureDoor() {
+		Room r = allRooms.get("tunnel3");
+		r.setExits("tunnel2", "treasury","", "", "","");
+		r.items.remove("door");
+		//currentRoom = "treasury";
+		//lookAtRoom(true);
+	}
+	
 	void moveLeaves() {
 		System.out.println("[cough][cough] These leaves are too dusty. A drink would help.");
 		player.injury(10); //for choking dust
@@ -939,8 +981,19 @@ public class AdventureMain {
 		}
 	}
 	
-	void flashlight() {
-		System.out.println("fixme: flashlight");
-		System.exit(0);
+	//room method
+	void fetidCave() {
+		System.out.println("There is a really bad smell. Something died in there. Do you really want to go in?");
+		char ans = getCommand().toUpperCase().charAt(0);
+		if (ans != 'Y') {
+			System.out.println("okay then");
+			return;
+		}	
+		currentRoom = "cave3";
+		System.out.println("Danger: The miasma has poisoned you.");
+		player.isPoisoned = true;
+		lookAtRoom(false);
+		player.update();
 	}
+	
 }

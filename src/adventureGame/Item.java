@@ -136,11 +136,10 @@ class Item {
 		itemList.put("\"rock\"",z);
 		roomList.get("black_lake").items.add("\"rock\"");				
 
-		z = new Item("a very useful flashlight: waterproof, knurled aluminum, trilithium batteries");
-		z.descrLook = "It won't work without batteries!";
-		z.descrActive = "the flashlight is glowing brightly";
+		z = new Item("a very useful flashlight: waterproof, knurled aluminum");
+		//z.descrLook = "It won't work without batteries!";
+		z.descrActive = "The flashlight is glowing brightly";
 		z.descrRoom = "Someone dropped a flashlight at the side of the path.";
-		z.activatedMethod = "a_flashlight";
 		itemList.put("flashlight",z);
 		roomList.get("clearing").items.add("flashlight");
 
@@ -161,11 +160,15 @@ class Item {
 		itemList.put("chest",z);
 		//add to a room
 
-		z = new Item("a package of lembas. Someone from Middle Earth was here.");
-		z.foodpoints = 20;
+		z = new Item("It looks elven. Someone from Middle Earth was here.");
 		z.descrRoom = "A dirty package wrapped in leaves is wedged under the door.";
-		//FIXME z.activatedMethod = "a_openLembas";
+		z.isContainer = true;
+		z.itemContained = "lembas";
 		itemList.put("package",z);
+		
+		z = new Item("A few precious wafers of lembas.");
+		z.foodpoints = 20;
+		z.descrRoom = "A package of lembas. Someone from Middle Earth was here.";
 		itemList.put("lembas",z);
 
 		z = new Item("You can't reach the glowing/shiny crystals, and,\n"
@@ -174,6 +177,10 @@ class Item {
 		itemList.put("crystals",z);
 		roomList.get("treasury").items.add("crystals");
 		roomList.get("cave2").items.add("crystals");
+		
+		z = new Item("One of the crystals is has broken off the wall and is glowing brightly.");
+		z.descrRoom = ("One of the crystals is has broken off the wall and is glowing brightly.");
+		itemList.put("crystal",z);
 
 		z = new Item("The lake is black and wet"); //FIXME : you can OPEN LAKE!!!
 		z.isCarryable = false;
@@ -194,10 +201,12 @@ class Item {
 		z = new Item("a heavy metal door with debris behind it");
 		z.descrRoom = "The heavy door is blocking most of the western exit, but you can still squeeze past.";
 		z.isCarryable = false;
+		z.moveMethod = "m_moveTreasureDoor";
 		z.moveDesc = "With great effort you move the door a few inches.\n "
 				+ "You see a small package under the door.";
 		z.revealItem = "package";
 		itemList.put("door",z);
+		roomList.get("tunnel3").items.add("door");
 		roomList.get("treasury").items.add("door");
 
 		z = new Item("A beautiful emerald!");
@@ -224,6 +233,17 @@ class Item {
 		z.descrActive = "A silver bell with an emerald clapper.";
 		z.descrRoom = "A silver bell lies on the floor.";
 		itemList.put("bell", z);
+		
+		z = new Item("The wall is has messages (graffiti?) carvgared into it. You can decipher the meaning!");
+		z.descrRoom = "The west wall is covered with some sort of writing";
+		z.descrRead = "\n<><><><><><><><>\n"
+				+ "INSERT CLUE HERE\n"
+				+ "Lake67d43f53down86k36goodwater67u3KEY\n"
+				+ "Pd^42^4t^j secret room a32@ds@wd@f tunnel\n"
+				+ "It's rumored that elven bread cures the poison.\n"
+				+ "<><><><><><><><>\n";
+		itemList.put("wall", z);
+		roomList.get("cave3").items.add("wall");
 
 	}
 
