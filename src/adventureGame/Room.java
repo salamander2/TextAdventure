@@ -65,7 +65,7 @@ public class Room{
 				+ "There is a path leaning north and another winding one that heads off to the west.");
 		//		   N S W E U D
 		r.setExits("forest1", "",  "path1","", "","");		
-		roomList.put("clearing",r);		
+		roomList.put("clearing",r);	
 		
 		r = new Room("Forest path", 
 				"You are on a path in the forest. "

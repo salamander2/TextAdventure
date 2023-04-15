@@ -22,6 +22,8 @@ public class AdventureMain {
 	String currentRoom;
 	Player player;
 
+	//This is used for a two stage warning system when you enter a dark room.
+	//First there's a warning. If you do not get light somehow on the next turn, then you're dead.
 	enum Dark{OKAY, WARNING, DEAD};
 	Dark darkWarning = Dark.OKAY;
 
@@ -30,11 +32,11 @@ public class AdventureMain {
 	AdventureMain() {
 
 		boolean playing = true;
+		
+		Room.setupRooms(allRooms);
+		Item.setUpItems(itemMap, allRooms);
+		
 		String command = "";
-
-		Room.setupRooms(allRooms);		
-		Item.setUpItems(itemMap, allRooms);		
-
 		System.out.print("Please type your firstname: (press enter for \"Billy\") ");
 		String name = getCommand();
 		if (name.equals("qwerty")) name = "Billy";
@@ -64,23 +66,12 @@ public class AdventureMain {
 				continue;
 			}
 
-			if (player.getHealth() < 0) {
-				System.out.println("You died of a bad infection. How sad.");
-				playing=false;
+			if (! player.checkup() ) {
+				playing = false;
 				continue;
 			}
-			//handle all food points
-			//TODO: fix this so that it does not use magic numbers
-			{
-				int fp = player.getFoodPoints();			
-				if (fp > 0 && fp < 20) System.out.println("You are getting hungry.");
-				if (fp > -15 && fp <= 0) System.out.println("You are starving.");
-				if (fp < -15) {
-					System.out.println("You starved to death. How sad.");
-					playing=false;
-				}
-			}
-			//check if player won the game.
+			
+			//TODO check if player won the game.
 		}
 	}
 
@@ -126,12 +117,14 @@ public class AdventureMain {
 		text = this.removeArticles(text).trim();
 		return text;
 	}
+	
+	
 
 	boolean parseCommand(String text) {
 
 		text = text.toLowerCase().trim();
 		text = preProcess(text);
-		text = itemSynonyms(text); 
+		text = Item.itemSynonyms(text); 
 
 		//no words entered:
 		if (text.length()==0 || text.equals("qwerty")) return true;
@@ -151,6 +144,7 @@ public class AdventureMain {
 		if (word3.equals("rock") && allRooms.get(currentRoom).items.contains("\"rock\"")) word3 = "\"rock\"";
 
 		/***** MAIN PROCESSING *****/
+		//any command that uses up a turn and food, must run player.update();
 		switch(word1) {
 
 		// ****  one word commands  **** //
@@ -173,6 +167,7 @@ public class AdventureMain {
 			break;	
 		case "look":
 			lookAtRoom(true);
+			player.update();
 			break;
 		case "search":
 			search();
@@ -237,6 +232,7 @@ public class AdventureMain {
 			break;
 		case "put":  
 			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
+			//TODO: add player.update()
 			//This does not work EXCEPT for these two special commands
 			if (text.startsWith("put emerald in bell")) activate("bell");
 			//special lake command
@@ -280,6 +276,7 @@ public class AdventureMain {
 			/*	turn on flashlight.  turn off flashlight
 			turn flashlight on, turn flashlight off		*/
 		case "turn":
+			//TODO: update this with flashlight() method
 			if (word3.equals("flashlight")) {
 				if (word2.equals("on")) { 
 					itemMap.get("flashlight").setActivate(true);
@@ -314,8 +311,7 @@ public class AdventureMain {
 			return;
 		}
 
-		player.hunger(1);
-		player.turns++;
+		player.update();
 		 
 		//run methods for moving ... e.g. climbing the tree and falling
 		if (newRoom.substring(0, 2).equals("r_")) {			
@@ -392,6 +388,7 @@ public class AdventureMain {
 
 			if (it.isActivated()) System.out.println(it.descrActive);
 			else System.out.println(it.descrLook);
+			player.update();
 			return;
 		}
 		//is item in current room?
@@ -404,7 +401,8 @@ public class AdventureMain {
 				if (q.itemContained.equals("")) System.out.println("and it is empty.");	
 				else System.out.println("and it contains a " + q.itemContained);							
 			}
-			else System.out.println(q.descrLook);			
+			else System.out.println(q.descrLook);	
+			player.update();
 			return;
 		}
 		System.out.println("That object does not exist (here).");	
@@ -424,6 +422,7 @@ public class AdventureMain {
 			System.out.println("The " + itemname + " says: " + z.descrRead);
 		else
 			System.out.println("There is no writing on the " + itemname +".");
+		player.update();
 	}
 
 	void eatItem(String itemname) {
@@ -436,6 +435,7 @@ public class AdventureMain {
 		if (r.items.contains(itemname)) {			
 			if (! player.eat(itemMap.get(itemname))) return;				
 			r.items.remove(itemname);
+			player.update();
 			return;				
 		}
 		//is item in inventory:
@@ -443,6 +443,7 @@ public class AdventureMain {
 			if (s.equals(itemname)) {
 				if (! player.eat(itemMap.get(itemname))) return;				
 				inventory.remove(itemname);
+				player.update();
 				return;
 			}
 		}
@@ -456,19 +457,25 @@ public class AdventureMain {
 				player.heal(10);
 				System.out.println("That drink was refreshing and helped so much!");
 				player.isThirsty = false;
+				player.update();
 				return;
 			}
 			//otherwise you just enjoy the drink an nothing happens.
 			System.out.println("The water is very cold. ");
 			if (! inventory.contains("key")) {
 				System.out.println("You get a glimpse of something shiny in the dark water.");
+				player.update();
 			}
+		}
+		else {
+			System.out.println("How would you drink that?");
 		}
 	}
 
 	void search() {
 		if (currentRoom.contentEquals("black_lake")) {
 			//find key
+			player.update();
 			return;
 		}
 		System.out.println("Being fairly observant all you need to do is to \"look at __\". "
@@ -478,7 +485,7 @@ public class AdventureMain {
 	
 	void pray() {
 		System.out.println("In utter desperation you pray to the divinity.\n "
-				+ "This takes a lot of effort to get it to actually work.");
+				+ "This takes a lot of effort to get it to actually work.\n ... ");
 		thsleep(600);
 		System.out.println("\nAre you sure you want to do this? You might get injured.");
 		char ans = getCommand().toUpperCase().charAt(0);
@@ -487,10 +494,33 @@ public class AdventureMain {
 			return;
 		}
 		player.injury(10);
-		
+		player.update();
 		System.out.println("You see a vision of a map! It looks the north maze.");
 		thsleep(600);
-		//TODO  FIXME  draw maze
+		String s = "\n\n";
+		s+="                               &         \n";
+		s+="             forest <<--------[6]********\n";
+		s+="                               |        *\n";
+		s+="                               |        *\n";
+		s+="    @@@@@@@@@@@@@@@[4]*********|*********\n";
+		s+="    @               $          |         \n";
+		s+="    @               $          |         \n";
+		s+="    @               $          |         \n";
+		s+="   [5]########      $          |         \n";
+		s+="    .        #      $          |         \n";
+		s+="    .        #      $          |         \n";
+		s+="    .    /<<[3]&    $          |         \n";
+		s+="    .    !   |      $          |         \n";
+		s+="    .    !   |      $          |         \n";
+		s+="    .    !   +------$----------+         \n";
+		s+="    .    !          $                    \n";
+		s+="    .    \\  &       $                    \n";
+		s+="    .......[2]$$$$$$$                    \n";
+		s+="            ^                            \n";
+		s+="            ^                            \n";
+		s+="     down tree (otherside)               \n";
+		
+		System.out.println(s);
 	}
 	
 	void startingMessage() {
@@ -509,6 +539,7 @@ public class AdventureMain {
 				System.out.println("You have a much needed nap");
 				player.heal(7);
 				player.turns += 5;
+				player.hunger(2);
 			} else {
 				System.out.println("You're too wide awake to sleep");
 			}
@@ -550,6 +581,7 @@ public class AdventureMain {
 			takeObject(eachItem);
 		}
 		System.out.println("Everything in the room has been added to your backpack.");
+		player.update();
 	}
 
 	void takeObject(String itemName) {
@@ -579,6 +611,7 @@ public class AdventureMain {
 		r.items.remove(itemName);
 		inventory.add(itemName);
 		System.out.println("You add the " + itemName + " to your backpack.");
+		player.update();
 	}
 
 	void takeObject(String itemName, String container) {
@@ -605,7 +638,8 @@ public class AdventureMain {
 			}
 			inventory.add(itemName);
 			it2.itemContained = "";	//TODO does this remove it from the item??
-			System.out.println("You add the " + itemName + " to your backpack.");	
+			System.out.println("You add the " + itemName + " to your backpack.");
+			player.update();
 
 		} else {
 			System.out.printf("There is no %s is in the %s.%n", itemName, container);
@@ -620,6 +654,7 @@ public class AdventureMain {
 				allRooms.get(currentRoom).items.add(nextItem);				
 			}
 			System.out.println("You drop everything!");
+			player.update();
 			return;			
 		}
 
@@ -627,6 +662,7 @@ public class AdventureMain {
 			inventory.remove(item);
 			allRooms.get(currentRoom).items.add(item);
 			System.out.println("You drop the " + item);
+			player.update();
 		} else {
 			System.out.println("You do not have " + item + " in your backpack.");
 		}
@@ -634,9 +670,14 @@ public class AdventureMain {
 
 	void showInventory() {
 		//show health, hunger, status, inventory
-		System.out.println("\n*******************************************************************************");
-		System.out.printf("Stats for %s: \tHealth=%s\t\tFood=%s\t\tTurns=%s%n" ,
-				player.name, player.getHealth(), player.getFoodPoints(), player.turns);
+		System.out.printf("\n****************************** TURNS: %2d **************************************\n",player.turns);
+		System.out.printf("Stats for %s: \tHealth=%s\t\tFood=%s\t\t%n" ,
+				player.name, player.getHealth(), player.getFoodPoints());
+		String s = "";
+		if (player.isThirsty) s+="~~ You are thirsty. ~~\t\t";
+		if (player.isPoisoned) s+="%% You are poisoned! %%\t";
+		if (s.length() > 0) System.out.println(s);
+		System.out.println();
 		for (int i=0; i < inventory.size(); i++) {
 			System.out.println((char)(i+97) + ") " + inventory.get(i));
 		}
@@ -669,7 +710,8 @@ public class AdventureMain {
 				}
 				if (it.moveMethod.startsWith("m_")) runMethod(it.moveMethod);
 			}
-			else System.out.println("You can't move that object.");			
+			else System.out.println("You can't move that object.");	
+			player.update();
 			return;
 		}
 		System.out.println("That object does not exist (here).");	
@@ -689,6 +731,7 @@ public class AdventureMain {
 		if (it.isOpen) {
 			System.out.println("You close the " + itemName);
 			it.isOpen = false;
+			player.update();
 		} else {
 			System.out.println("The " + itemName + " is already closed.");
 		}
@@ -719,8 +762,10 @@ public class AdventureMain {
 			runMethod(it.activatedMethod);
 		}
 		System.out.println(it.descrActive);
+		player.update();
 	}
 
+	//TODO fix this method.
 	void openStuff(String w2, String w3, String w4)
 	{
 		//we know that w2 is not empty.
@@ -729,8 +774,6 @@ public class AdventureMain {
 		if (w3.equals("with") && w4.length() > 0) {
 			//openObject(w2, w4);
 			openObject(w2);
-		} else if (w2.contains("door")) {
-			openDoor(w2);
 		}	
 		else {
 			openObject(w2);
@@ -779,22 +822,6 @@ public class AdventureMain {
 		openObject(itemName);
 	}*/
 
-	void openDoor(String itemName) {
-		if (currentRoom.equals("cave2") || currentRoom.equals("cave3") ) {
-			if (itemMap.get("door2").isOpen == false) {
-				System.out.println("You open the door.");
-				itemMap.get("door2").isOpen = true;
-			} else {
-				System.out.println("The door is already open.");
-			}			
-		}
-	}
-
-	void closeDoor(String itemName) {
-		//FIXME
-		System.out.println("You close the door.");
-		System.out.println("The door is already closed.");		
-	}
 
 	void ringBell(String itemName) {
 
@@ -821,6 +848,8 @@ public class AdventureMain {
 		System.exit(0);
 	}
 
+	/************** Run special methods via reflection ****************/
+	
 	/**************************************************
 	 * This will run the methods stored in variables
 	 * for any part of the program.
@@ -828,6 +857,8 @@ public class AdventureMain {
 	 * m_  = move item method
 	 * a_  = activate method
 	 ************************************************/
+	//Ideally these methods should be in the Room or Item classes (and static), but the manipulate too many global variables.
+	
 	void runMethod(String methName) {		
 		methName = methName.substring(2); //strip off the first two letters
 		//Class<AdventureMain> clazz = AdventureMain.class;
@@ -883,6 +914,7 @@ public class AdventureMain {
 	void moveLeaves() {
 		System.out.println("[cough][cough] These leaves are too dusty. A drink would help.");
 		player.injury(10); //for choking dust
+		player.isThirsty = true;
 		//Why??
 		//if (roomList.get(currentRoom).items.contains("hammer")) player.injury(10);	 
 	}
@@ -898,7 +930,8 @@ public class AdventureMain {
 		}
 	}
 	
-	boolean flashlight() {
-		
+	void flashlight() {
+		System.out.println("fixme: flashlight");
+		System.exit(0);
 	}
 }
