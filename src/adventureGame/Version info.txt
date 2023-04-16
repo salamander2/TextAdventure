@@ -4,17 +4,15 @@ DONE:
   flashlight
   treasure door
   lembas package, open, eat
-  wall in fetid cave
-
+  wall clue in fetid cave
+  lake and key are fixed
   
 TO FIX:  
-* lake is an object. Search does not take the key
 * winning should be checked elsewhere
 * throw knife at goblin
 * the earthquake should make the chest appear in the treasury
 * put command does not work
 * doublecheck 
-	reach command 
 	smash command
 	use command
 	close command

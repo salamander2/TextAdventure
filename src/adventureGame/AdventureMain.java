@@ -32,12 +32,12 @@ public class AdventureMain {
 	AdventureMain() {
 
 		boolean playing = true;
-		
+
 		Room.setupRooms(allRooms);
 		Item.setUpItems(itemMap, allRooms);
-		
+
 		inventory.add("batteries");
-		
+
 		String command = "";
 		System.out.print("Please type your firstname: (press enter for \"Billy\") ");
 		String name = getCommand();
@@ -59,7 +59,13 @@ public class AdventureMain {
 
 		while (playing) {
 			command = getCommand();
-
+			
+			//pressing enter without typing anything should not run playerCheckup (and print that you are hungry).
+			if (command.equals("qwerty")) {
+				System.out.println("?");
+				continue;
+			}
+			
 			playing = parseCommand(command);
 
 			if (darkWarning == Dark.DEAD) {
@@ -72,16 +78,23 @@ public class AdventureMain {
 				playing = false;
 				continue;
 			}
-			
-			//TODO check if player won the game.
+
+			//check if player won the game.
+			if (itemMap.get("bell").isActivated() && itemMap.get("emerald").isActivated()) {
+				playing = false;
+				winMessage();
+			}
 		}
+
+		System.out.println("\n **** Thanks for playing. ****");
+		//		System.exit(0);
 	}
 
 
 	String getCommand() {
 		Scanner sc = new Scanner(System.in);		
 		String text = sc.nextLine();
-		if (text.length() == 0) text = "qwerty"; //default command
+		if (text.length() == 0) text = "qwerty"; //default command for pressing "Enter"
 		return text;
 	}
 
@@ -106,7 +119,7 @@ public class AdventureMain {
 		text = text.replaceAll("pick up", "pickup");
 		text = text.replaceAll("look at", "lookat");
 		text = text.replaceAll("climb up", "climbup");
-		
+
 		//No. we have to allow "turn on flashlight" as well as "turn flashlight on"
 		//text = text.replaceAll("turn on", "turnon");
 		//text = text.replaceAll("turn off", "turnoff");
@@ -116,7 +129,7 @@ public class AdventureMain {
 		text = this.removeArticles(text).trim();
 		return text;
 	}
-	
+
 
 	boolean parseCommand(String text) {
 
@@ -170,6 +183,11 @@ public class AdventureMain {
 		case "search":
 			search();
 			break;
+		case "swim":
+		case "wash":
+		case "bathe":
+			swim();
+			break;
 		case "please":
 			if (! word2.equals("help")) return true;
 		case "pray":
@@ -179,7 +197,7 @@ public class AdventureMain {
 			printHelp();
 			break;
 
-		// *** two word commands ***
+			// *** two word commands ***
 		case "climbup":
 		case "climb":
 			if (word2.equals("")) {
@@ -228,7 +246,7 @@ public class AdventureMain {
 		case "move": //move an item. These are things you can't pick up.
 			moveItem(word2);
 			break;
-		//FIXME
+			//FIXME
 		case "put":  
 			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
 			//TODO: add player.update()
@@ -294,7 +312,7 @@ public class AdventureMain {
 			return;
 		}
 
-		 
+
 		//run methods for moving ... e.g. climbing the tree and falling
 		//this method must put the player in the correct room and also run player.udpate()
 		if (newRoom.substring(0, 2).equals("r_")) {			
@@ -368,18 +386,18 @@ public class AdventureMain {
 		}
 		return null;
 	}
-	*/
+	 */
 	boolean itemPresent(String itemName) {
 		if ((inventory.contains(itemName))) return true;		
 		Room r = allRooms.get(currentRoom);
 		if (r.items.contains(itemName)) return true;
 		return false;
 	}
-	
+
 	void lookAtObject(String itemName){
 		//is item in inventory
 		if ((inventory.contains(itemName))) {
-			
+
 			Item it = itemMap.get(itemName);
 
 			if (it.isActivated()) System.out.println(it.descrActive);
@@ -401,6 +419,7 @@ public class AdventureMain {
 			player.update();
 			return;
 		}
+		//TODO: containers - all open containers must be searched 
 		System.out.println("That object does not exist (here).");	
 	}
 
@@ -413,12 +432,12 @@ public class AdventureMain {
 			System.out.println("There is no '" + itemname + "' in this location, nor in your inventory.");
 			return;			
 		}
-		
+
 		Item z = null;
 		if ((inventory.contains(itemname))) z = itemMap.get(itemname);	
 		Room r = allRooms.get(currentRoom);
 		if (r.items.contains(itemname)) z = itemMap.get(itemname);
-		
+
 		if (z.descrRead.length() > 0)
 			System.out.println("The " + itemname + " says: " + z.descrRead);
 		else
@@ -451,7 +470,7 @@ public class AdventureMain {
 		}
 		System.out.println("There is no " + itemname + " here.");
 	}
-	
+
 	void drink(String liquid) {
 		if (currentRoom.contentEquals("black_lake")) {
 			if (player.isThirsty) {
@@ -483,17 +502,19 @@ public class AdventureMain {
 				System.out.println("You notice a shiny piece of metal in the water\n"
 						+ "You pick it up and add it to your inventory.");
 				inventory.add("key");
-				player.update();
+				Item it = itemMap.get("lake");
+				it.activatedMethod = ""; //prevent "reach into lake" from duplicating the key
 			} else {
-				System.out.println("All you see is black water.");
+				System.out.println("All you see is inviting black water.");
 			}
+			player.update();
 			return;
 		}
 		System.out.println("Being fairly observant all you need to do is to \"look at __\". "
 				+ "\nSearching really doesn't help you at all, "
 				+ "... except possibly at the lowest point in the game.");
 	}
-	
+
 	void pray() {
 		System.out.println("In utter desperation you pray to the divinity.\n "
 				+ "This takes a lot of effort to get it to actually work.\n ... ");
@@ -530,17 +551,17 @@ public class AdventureMain {
 		s+="            ^                            \n";
 		s+="            ^                            \n";
 		s+="     down tree (otherside)               \n";
-		
+
 		System.out.println(s);
 	}
-	
+
 	void startingMessage() {
 		currentRoom = "clearing";
 		String startingText = "\n\n" + player.name + ". You wake up in a forest clearing.\n "
 				+ "The birds are sinning and the sky is shining.\n"
 				+ "... This feels like a *very* special clearing. "
 				+ "You wonder if you're in another dimension or timeline.";
-		
+
 		System.out.println(startingText);
 	}
 
@@ -558,7 +579,17 @@ public class AdventureMain {
 			System.out.println("It doesn't feel safe to sleep here.");			
 		}
 	}
-	
+
+	void swim() {
+		if (currentRoom.equals("black_lake")) {
+			System.out.println("You swim in the lake and feel refreshed.");
+			player.heal(5);
+			player.update();
+		} else {
+			System.out.println("There's nowhere to swim here.");
+		}
+	}
+
 	//Thread.sleep
 	void thsleep(int n) {
 		try {Thread.sleep(n);
@@ -752,7 +783,7 @@ public class AdventureMain {
 	void flashlight(String word2, String word3) {
 		boolean turnOn = false;
 		if (word2.equals("on") || word3.equals("on")) turnOn = true;
-		
+
 		if (! itemPresent("flashlight")) {
 			System.out.println("You don't seem to have the flashlight handy.");
 			return;
@@ -762,25 +793,24 @@ public class AdventureMain {
 			return;
 		}
 		if (turnOn) {
-				itemMap.get("flashlight").setActivate(true);
-				lookAtObject("flashlight");
-			}
+			itemMap.get("flashlight").setActivate(true);
+			lookAtObject("flashlight");
+		}
 		else {
 			itemMap.get("flashlight").setActivate(false);
 		}
 		//player.update();  <-- this is in setActivate()
 	}
-	
+
 	//TODO: what objects get activated? (by opening?)
 	//rock: hit rock with hammer or open rock with hammer, or smash rock with hammer
-	//flashlight: activated in switch statement
 	//lake (in black_lake room)
 	//hammer
 	//bell
 	void activate(String itemName) {
 		//exit if it is not in the room and not in the inventory
 		if (! itemPresent(itemName)) {
-			System.out.println("You don't have " + itemName + " in your inventory.");
+			System.out.println("You don't have " + itemName + " in your inventory (and it's not in the current location either.");
 			return;
 		}
 		Item it = itemMap.get(itemName);
@@ -813,18 +843,18 @@ public class AdventureMain {
 	}
 
 	void openObject(String itemName) {
-		
+
 		if (! itemPresent(itemName)) {
 			System.out.println("That object does not exist (here).");
 			return;
 		}
-		
+
 		Item it = itemMap.get(itemName);		
 		if (!it.isContainer) {
 			System.out.println("You cannot open that item.");
 			return;
 		}
-		
+
 		//special case for package containing lembas
 		if (inventory.contains(itemName) && itemName.equals("package")) {
 			inventory.remove(itemName);
@@ -883,14 +913,24 @@ public class AdventureMain {
 			return;
 		}
 
+		player.update();
+		System.out.println("The emerald strikes the shimmering bell ... something transcendent happens ...");
+		itemMap.get("emerald").setActivate(true); //this triggers the end of the game.
+	}
+	
+	void winMessage() {
 		System.out.println("You ring the bell and a beautiful liquid sound fills the cave.\n"
-				+ "Everything shimmers and you find yourself back home - with the emerald bell still in your hand.\n"
-				+ "\n\n **** Thanks for playing. ****");
-		System.exit(0);
+				+ "Everything shimmers and you find yourself back home"
+				+ " and with the emerald bell still in your hand.\n");
+		if (inventory.contains("batteries")) 
+			System.out.println("The nuclear battery is worth millions. Maybe Elon Musk will buy it.");
+		if (inventory.contains("crystal")) 
+			System.out.println("You still have the strange glowing crystal. "
+			+ "What will you do, keep it hidden? sell it to DARPA? ?");
 	}
 
 	/************** Run special methods via reflection ****************/
-	
+
 	/**************************************************
 	 * This will run the methods stored in variables
 	 * for any part of the program.
@@ -899,17 +939,17 @@ public class AdventureMain {
 	 * a_  = activate method
 	 ************************************************/
 	//Ideally these methods should be in the Room or Item classes (and static), but the manipulate too many global variables.
-	
+
 	void runMethod(String methName) {		
 		methName = methName.substring(2); //strip off the first two letters
 		//Class<AdventureMain> clazz = AdventureMain.class;
 
 		try {
-//			Method method = clazz.getDeclaredMethod(methName, String.class);
+			//			Method method = clazz.getDeclaredMethod(methName, String.class);
 
 			Method m = AdventureMain.class.getDeclaredMethod(methName);
 			m.invoke(this); //method takes no parameters and we don't care about a return value
-//			AdventureMain.class.getDeclaredMethod(methName).invoke(null);
+			//			AdventureMain.class.getDeclaredMethod(methName).invoke(null);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
@@ -926,11 +966,14 @@ public class AdventureMain {
 	}
 
 	void getFromLake() {
-		//FIXME: stop the possibility of taking the same key multiple times.
 		System.out.println("You feel around in the dark water and pull up a small metal object.");
-		System.out.println("It's a key! The key has been added to your backpack.");
-		allRooms.get("black_lake").items.add("key");
-		takeObject("key");
+		System.out.println("It's a key!");
+		Item it = itemMap.get("key");
+		it.descrRoom = "A shimmering key";
+		it = itemMap.get("lake");
+		it.activatedMethod = ""; //do not ever show this message twice.
+		//		allRooms.get("black_lake").items.add("key");
+		//		takeObject("key");
 	}
 
 	void moveLever() {
@@ -961,7 +1004,7 @@ public class AdventureMain {
 		//currentRoom = "treasury";
 		//lookAtRoom(true);
 	}
-	
+
 	void moveLeaves() {
 		System.out.println("[cough][cough] These leaves are too dusty. A drink would help.");
 		player.injury(10); //for choking dust
@@ -980,7 +1023,7 @@ public class AdventureMain {
 			System.out.println("You start smashing things, but nothing special happens.");
 		}
 	}
-	
+
 	//room method
 	void fetidCave() {
 		System.out.println("There is a really bad smell. Something died in there. Do you really want to go in?");
@@ -995,5 +1038,5 @@ public class AdventureMain {
 		lookAtRoom(false);
 		player.update();
 	}
-	
+
 }

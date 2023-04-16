@@ -182,21 +182,20 @@ class Item {
 		z.descrRoom = ("One of the crystals is has broken off the wall and is glowing brightly.");
 		itemList.put("crystal",z);
 
-		z = new Item("The lake is black and wet"); //FIXME : you can OPEN LAKE!!!
+		z = new Item("The lake is black and wet"); 
 		z.isCarryable = false;
-		z.isContainer = true;
 		z.descrRoom = "";		
-		z.activatedMethod = "a_getFromLake";
-		z.descrActive = "The lake is black and wet";
-		z.revealItem = "key"; 
+		z.activatedMethod="a_getFromLake";
 		itemList.put("lake",z);
-		itemList.put("water",z); //as long as there is no other water in the game
+		//itemList.put("water",z); //as long as there is no other water in the game
 		roomList.get("black_lake").items.add("lake");
 
 		//make the key!
 		z = new Item("The silver key has a impatient multidimensional appearance.");
-		z.descrRoom = "A shiny key lies nearby.";
-		itemList.put("key",z);		
+		z.descrRoom = "";
+		itemList.put("key",z);
+		roomList.get("black_lake").items.add("key");
+
 
 		z = new Item("a heavy metal door with debris behind it");
 		z.descrRoom = "The heavy door is blocking most of the western exit, but you can still squeeze past.";
@@ -209,7 +208,7 @@ class Item {
 		roomList.get("tunnel3").items.add("door");
 		roomList.get("treasury").items.add("door");
 
-		z = new Item("A beautiful emerald!");
+		z = new Item("A beautiful teardrop shaped emerald!");
 		z.descrRoom = "You see a green gemstone.";		
 		itemList.put("emerald",z); //this is in the chest 
 
@@ -234,16 +233,23 @@ class Item {
 		z.descrRoom = "A silver bell lies on the floor.";
 		itemList.put("bell", z);
 		
-		z = new Item("The wall is has messages (graffiti?) carvgared into it. You can decipher the meaning!");
+		z = new Item("The wall is has messages (graffiti?) carvared into it. You can decipher the meaning!");
+		z.isCarryable = false;
 		z.descrRoom = "The west wall is covered with some sort of writing";
 		z.descrRead = "\n<><><><><><><><>\n"
-				+ "INSERT CLUE HERE\n"
-				+ "Lake67d43f53down86k36goodwater67u3KEY\n"
-				+ "Pd^42^4t^j secret room a32@ds@wd@f tunnel\n"
-				+ "It's rumored that elven bread cures the poison.\n"
+				+ "<>Sember ubi sububi\n"
+				+ "<>Pippin waz hyre\n"
+				+ "<>Lake67d43f53down86k36goodwater67u3KEY\n"
+				+ "<>Pd^42^4t^j secret room a32@ds@wd@f tunnel\n"
+				+ "<>Lembas cures poison.\n"
 				+ "<><><><><><><><>\n";
 		itemList.put("wall", z);
 		roomList.get("cave3").items.add("wall");
+		
+		z = new Item("The murals are fascinating, but your brain cannot comprehend what they are intended to depict.");
+		z.isCarryable = false;
+		itemList.put("mural", z);
+		roomList.get("secret_room").items.add("mural");
 
 	}
 

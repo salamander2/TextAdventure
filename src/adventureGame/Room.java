@@ -121,8 +121,8 @@ public class Room{
 		roomList.put("forest2",r);	
 		
 		r = new Room("Entrance to cave",
-				"You're standing in the entrance to a dark cave. A path is to the east "
-				+ "and the cave goes further on to the west");
+				"You have come to the side of a mountain and are standing at the entrance to a dark cave. "
+				+ "A path is to the east and the cave goes further on to the west");
 		r.setExits("", "","cave2", "path1", "","");
 		roomList.put("cave1",r);
 
