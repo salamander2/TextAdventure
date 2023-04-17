@@ -16,7 +16,7 @@ public class Player {
 	final String name;
 	int turns = 0;
 	private int foodPoints = 50;
-	private int health = 70;
+	private int health = 90;
 	boolean isThirsty = false;
 	boolean isPoisoned = false;
 	//private String status = "";
@@ -65,7 +65,7 @@ public class Player {
 		turns++;
 		foodPoints --;
 		
-		if (isPoisoned) health -= 8;
+		if (isPoisoned) health -= 5;
 		if (foodPoints < STARVING) health -= 3;
 	}
 	

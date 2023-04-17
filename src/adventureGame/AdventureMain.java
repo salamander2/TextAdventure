@@ -161,8 +161,8 @@ public class AdventureMain {
 		// ****  one word commands  **** //
 		case "quit": case "exit":
 			System.out.print("Do you really want to quit the game? ");
-			String ans = getCommand().toUpperCase();
-			if (ans.equals("YES") || ans.equals("Y")) {
+			char ans = getCommand().toUpperCase().charAt(0);
+			if (ans == 'Y') {
 				System.out.print("Thanks for playing. Bye.");
 				return false;
 			}			
@@ -259,23 +259,35 @@ public class AdventureMain {
 		case "reach":
 			if (currentRoom.equals("black_lake") && text.startsWith("reach in lake")) activate("lake");
 			break;
-			//hit rock with hammer
 		case "smash":
 		case "break":
 		case "hit":
-			if (text.contains (" rock with hammer")) activate("hammer");
-			else System.out.println("Sorry, I don't understand that command");
+			//"break rock with hammer"  or "break rock" while you have a hammer
+//			if (text.contains ("rock")) {	
+			if(text.contains("with hammer") || inventory.contains("hammer")) {
+				activate("hammer");
+			}
+			
+			else System.out.println("I'm not sure how to do that.");
 			break;
-			//use hammer to break rock
+			
+		//TODO: fix "use"
 		case "use":
 			if (text.startsWith("use hammer to") && text.contains("rock")) {
 				activate("hammer");
 				break;
 			}
-			System.out.println("Sorry, I don't understand that command");
+			System.out.println("Sorry, I don't understand that command.");
 			//activate(word2);
 			break;
-
+		case "close":
+			if (word2=="") {
+				System.out.println("close what?");				
+			} else {
+				closeObject(word2);
+			}			
+			break;			
+		
 			//SPECIAL COMMANDS
 			//get this working for open paper and open package
 		case "open":
@@ -335,7 +347,7 @@ public class AdventureMain {
 	void lookAtRoom(boolean look) {
 		Room rm = allRooms.get(currentRoom);
 		if (rm == null) { 
-			System.out.println("ERROR: room \""+ currentRoom + "\" does not exist.");
+			System.out.println("CRITICAL ERROR: Location \""+ currentRoom + "\" does not exist.");
 			return;
 		}		
 
@@ -622,7 +634,7 @@ public class AdventureMain {
 			}
 			takeObject(eachItem);
 		}
-		System.out.println("Everything in the room has been added to your backpack.");
+		System.out.println("Everything in this location has been added to your backpack.");
 		player.update();
 	}
 
@@ -772,6 +784,16 @@ public class AdventureMain {
 			return;
 		}
 		if (it.isOpen) {
+			if (! it.openRequires.isBlank()) {
+				System.out.println("If you close the *" + itemName + "* "
+						+ "you will need a " + it.openRequires + " to open it again.");
+				System.out.print("Proceed? (Y/N)" );
+				char ans = getCommand().toUpperCase().charAt(0);
+				if (ans != 'Y') {
+					System.out.println("okay then");
+					return;
+				}	
+			}
 			System.out.println("You close the " + itemName);
 			it.isOpen = false;
 			player.update();
@@ -905,7 +927,7 @@ public class AdventureMain {
 			return;
 		}
 		if (! currentRoom.equals("cave2")) {
-			System.out.println("The bell doesn't work in this room/location.");
+			System.out.println("The bell doesn't work in this location.");
 			return;			
 		}
 		if (! itemMap.get("bell").isActivated()) {
@@ -976,10 +998,11 @@ public class AdventureMain {
 		//		takeObject("key");
 	}
 
+	//This uses the "move" command to reveal the chest. 
 	void moveLever() {
-		System.out.println("The ground trembles. You hear a deep grinding noise."
-				+ "\nThe room shakes and part of it opens."
-				+ "\nYou hear falling rocks. Dust is choking you.");
+		System.out.println("The ground trembles violently. You hear a deep grinding noise."
+				+ "\nYou hear falling rocks; your shoulder gets a nasty gash; dust is choking you."
+				+ "\nThe room shakes and something massive falls from the ceiling");
 		player.injury(15);
 		//make lever immoveable.
 		Item z = new Item("The lever looks totally worn out.");	
@@ -1016,11 +1039,12 @@ public class AdventureMain {
 	void useHammer() {
 		Room r = allRooms.get(currentRoom);
 		if (r.items.contains("\"rock\"")) {
-			System.out.println("The rock breaks open revealing a golden bell.");
-			allRooms.get(currentRoom).items.remove("\"rock\""); //	remove "rock"
-			allRooms.get(currentRoom).items.add("bell");			
+			System.out.println("The rock breaks open revealing a shimmering silver bell.");
+			r.items.remove("\"rock\""); //	remove "rock"
+			r.items.add("bell");			
 		} else {
 			System.out.println("You start smashing things, but nothing special happens.");
+			System.out.println("But you did get rid of some of your pent up aggression.");
 		}
 	}
 

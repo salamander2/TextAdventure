@@ -6,22 +6,31 @@ DONE:
   lembas package, open, eat
   wall clue in fetid cave
   lake and key are fixed
+  winning should be checked elsewhere
+  change all "room" text to "location"
+  smash command
+  close command seems to work
   
 TO FIX:  
-* winning should be checked elsewhere
 * throw knife at goblin
-* the earthquake should make the chest appear in the treasury
+* the earthquake should make the chest appear in the treasury 
+  X It's fine in the secret room, revealed by "move lever".
+  But this won't work if the other lever is connected to this one.
+   
 * put command does not work
-* doublecheck 
-	smash command
+
+* double check 
 	use command
-	close command
+	
+* allow containers to hold more than one item.
+
 ** Test every object and every room.
 
 * make southern forest with hole that drops you down to crystal cave. You get a crystal as a light.
-* should this only open up if you use the earthquake lever? The cave closes but the sothern forest opens up.
+* should this only open up if you use the earthquake lever? The cave closes but the southern forest opens up.
  This then provides an alternate route down, along with being trapped down there.
   Then the earthquake lever would have to be in a hollow above the cave that you climb up to. (or it could be connected to the one down below)
+ * crystal will have to also light up the room.
   
 
 v1.8

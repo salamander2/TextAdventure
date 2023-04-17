@@ -83,11 +83,13 @@ class Item {
 	 */
 
 	static void setUpItems(HashMap<String,Item> itemList, HashMap<String,Room> roomList) {
-		Item z = new Item("a ham sandwich with mustard");
-		z.descrRoom = "You smell a sandwich nearby.";
+		Item z = new Item("A decent piece of kudu biltong");
+		z.descrRoom = "You spot something that looks like biltong.";
 		z.foodpoints = 11;
-		itemList.put("sandwich",z);
-		roomList.get("path1").items.add("sandwich");
+		itemList.put("biltong",z);
+		roomList.get("path1").items.add("biltong");
+		
+		//TODO add in mangosteen (in maze) and khao niaow (in southern forest)
 
 		z = new Item("a sharp knife with a bone handle");
 		z.descrRoom = "There is a knife embedded in the tree trunk.";
@@ -111,7 +113,7 @@ class Item {
 		itemList.put("leaves", z);
 		roomList.get("forest2").items.add("leaves");
 
-		z = new Item("a hammer from Canadian Tire! It has a wooden handle.");
+		z = new Item("A hammer from Canadian Tire! It has a wooden handle.");
 		z.descrRoom = "A hammer lies on the ground.";
 		z.activatedMethod = "a_useHammer";
 		itemList.put("hammer", z);
@@ -144,13 +146,13 @@ class Item {
 		roomList.get("clearing").items.add("flashlight");
 
 		z = new Item("strange flashlight battery");
-		z.descrLook = "Whoa! This is a nuclear, tri-lithium battery which will last 10 millennia!";
+		z.descrLook = "Whoa! This is a nuclear tri-lithium battery which will last 10 millennia!";
 		z.descrRoom = "Is that a battery under a bush?";
 		itemList.put("batteries", z);
 		roomList.get("maze3").items.add("batteries");
 
 		z = new Item("a securely locked heavy metal chest");
-		z.descrRoom = "A chest sits on a newly revealed shelf.";
+		z.descrRoom = "A heavy chest sits on a newly revealed shelf.";
 		z.isCarryable = false;
 		z.isContainer = true;
 		z.isOpen = false;
@@ -178,8 +180,9 @@ class Item {
 		roomList.get("treasury").items.add("crystals");
 		roomList.get("cave2").items.add("crystals");
 		
-		z = new Item("One of the crystals is has broken off the wall and is glowing brightly.");
-		z.descrRoom = ("One of the crystals is has broken off the wall and is glowing brightly.");
+		z = new Item("The crystal is about 6 inches long and glows green or yellow "
+				+ "with a brightness that responds to your mental command to it!.");
+		z.descrRoom = ("One of the crystals from the cave has has broken off the wall and is glowing.");
 		itemList.put("crystal",z);
 
 		z = new Item("The lake is black and wet"); 
@@ -230,7 +233,7 @@ class Item {
 
 		z = new Item("A silver bell. It is missing a jeweler clapper.");
 		z.descrActive = "A silver bell with an emerald clapper.";
-		z.descrRoom = "A silver bell lies on the floor.";
+		z.descrRoom = "A silver bell lies on the floor."; 
 		itemList.put("bell", z);
 		
 		z = new Item("The wall is has messages (graffiti?) carvared into it. You can decipher the meaning!");
