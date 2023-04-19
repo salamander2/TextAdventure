@@ -10,15 +10,15 @@ DONE:
   change all "room" text to "location"
   smash command
   close command seems to work
+  put command works (but only 1 item can go into a container)
+  cut paper works: make smaller papers with words that are various colours.
   
-TO FIX:  
+TO FIX:   
 * throw knife at goblin
 * the earthquake should make the chest appear in the treasury 
   X It's fine in the secret room, revealed by "move lever".
   But this won't work if the other lever is connected to this one.
    
-* put command does not work
-
 * double check 
 	use command: what else should be used?
 	

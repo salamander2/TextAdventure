@@ -36,12 +36,13 @@ public class AdventureMain {
 		Room.setupRooms(allRooms);
 		Item.setUpItems(itemMap, allRooms);
 
+		//DEBUG: 
 		inventory.add("batteries");
 
 		String command = "";
-		System.out.print("Please type your firstname: (press enter for \"Billy\") ");
+		System.out.print("Please type your firstname: (press enter for \"Zena\") ");
 		String name = getCommand();
-		if (name.equals("qwerty")) name = "Billy";
+		if (name.equals("qwerty")) name = "Zena";
 		player = new Player(name); //make a new player with given name		
 
 		startingMessage();
@@ -222,7 +223,15 @@ public class AdventureMain {
 		case "examine":
 			lookAtObject(word2);
 			break;
-
+		case "rip":
+		case "tear":
+			if (word2.equals("paper")) {
+				System.out.println("The paper is unusually tough. Cutting it might be better.");
+			}
+			break;
+		case "cut":
+			cutItem(word2);
+			break;
 		case "pickup":
 			takeObject(word2);
 			break;		
@@ -461,6 +470,59 @@ public class AdventureMain {
 		player.update();
 	}
 
+	
+	void cutItem(String itemname) {
+		if (itemname == "") {
+			System.out.println("Cut what?");
+			return;
+		}
+		if (!itemPresent(itemname)) {
+			System.out.println("There is no '" + itemname + "' in this location, nor in your inventory.");
+			return;			
+		}
+
+		Item it1 = null;
+		if ((inventory.contains(itemname))) it1 = itemMap.get(itemname);	
+		Room r = allRooms.get(currentRoom);
+		if (r.items.contains(itemname)) it1 = itemMap.get(itemname);
+		
+		/* The following code is only for cutting the paper repeatedly with the knife */
+		if (!inventory.contains("knife")) {
+			System.out.println("You have nothing to cut with. (Snort)");
+			return;
+		}
+		
+		if(! itemname.equals("paper")) {
+			System.out.println("Cutting that is not useful.");
+			return;
+		}
+		
+		String s1 = it1.descrRead;
+		int len = s1.length(); 
+		if (len < 20) {
+			System.out.println("The paper is too small to cut further");
+			return;
+		}
+		
+		String s2 = s1.substring(len/2, len-1);
+		s1 = s1.substring(0,len/2);
+		it1.descrRead = s1;
+		
+		if (len >= 80) {
+			inventory.add("yellowpaper");		
+			System.out.println("You cut the paper. Half of it turns yellow.");
+		} else if (len >= 40) {
+			inventory.add("pinkpaper");		
+			System.out.println("You cut the paper. Half of it turns pink.");
+		} else if (len >= 20){
+			inventory.add("bluepaper");		
+			System.out.println("You cut the paper. Half of it turns blue.");
+		}
+		
+		player.update();
+
+	}
+	
 	//Note: this method actually does the eating in the player class.
 	void eatItem(String itemname) {
 		if (itemname.equals("")){
@@ -573,7 +635,7 @@ public class AdventureMain {
 
 	void startingMessage() {
 		currentRoom = "clearing";
-		String startingText = "\n\n" + player.name + ". You wake up in a forest clearing.\n "
+		String startingText = "\n\nWelcome " + player.name + ". You wake up in a forest clearing.\n "
 				+ "The birds are sinning and the sky is shining.\n"
 				+ "... This feels like a *very* special clearing. "
 				+ "You wonder if you're in another dimension or timeline.";

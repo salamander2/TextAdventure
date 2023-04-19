@@ -89,8 +89,6 @@ class Item {
 		itemList.put("biltong",z);
 		roomList.get("path1").items.add("biltong");
 
-		//TODO add in mangosteen (in maze) and khao niaow (in southern forest)
-
 		z = new Item("a sharp knife with a bone handle");
 		z.descrRoom = "There is a knife embedded in the tree trunk.";
 		z.descrLook = "It looks like a throwing knife!";
@@ -102,6 +100,21 @@ class Item {
 		z.descrRead = "To return to your world, you need to ring the silver bell in the special location.";
 		itemList.put("paper",z);
 		roomList.get("maze2").items.add("paper");
+		
+		z = new Item("a small yellow paper with writing on it");
+		z.descrRoom = "There's a yellowpaper stuck on a thorn bush";
+		z.descrRead = "Drop items to map the maze you're in.";
+		itemList.put("yellowpaper",z);
+		
+		z = new Item("a small pink paper with writing on it");
+		z.descrRoom = "There's a pinkpaper stuck on a thorn bush";
+		z.descrRead = "The bell needs an emerald.";
+		itemList.put("pinkpaper",z);
+		
+		z = new Item("a small blue paper with writing on it");
+		z.descrRoom = "There's a bluepaper stuck on a thorn bush";
+		z.descrRead = "THe emerald is in a rock.";
+		itemList.put("bluepaper",z);
 
 		z = new Item("a pile of dusty leaves");
 		z.descrRoom = "Piles of deciduous leaves lie on the ground.";
@@ -130,8 +143,7 @@ class Item {
 		//		it cannot be called "rock2" because who will type that?
 		//		There must be a special method that check to see if the rock is in room X. If it is, then treat it as rock2		
 		z = new Item("This rock seems hollow. Hmmm... is it even a real rock? If only you had a hammer.");
-		z.descrRoom = "There are some loose rocks here.";
-		// z.activatedMethod = "hit rock with hammer to open it";  FIXME : What is this?  
+		z.descrRoom = "There are some loose rocks here.";  
 		z.isCarryable = false;
 		z.isActivated = false;
 		z.activatedMethod = "a_smashRock";
