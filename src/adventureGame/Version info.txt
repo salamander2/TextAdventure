@@ -20,7 +20,7 @@ TO FIX:
 * put command does not work
 
 * double check 
-	use command
+	use command: what else should be used?
 	
 * allow containers to hold more than one item.
 

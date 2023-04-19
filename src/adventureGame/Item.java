@@ -88,7 +88,7 @@ class Item {
 		z.foodpoints = 11;
 		itemList.put("biltong",z);
 		roomList.get("path1").items.add("biltong");
-		
+
 		//TODO add in mangosteen (in maze) and khao niaow (in southern forest)
 
 		z = new Item("a sharp knife with a bone handle");
@@ -167,7 +167,7 @@ class Item {
 		z.isContainer = true;
 		z.itemContained = "lembas";
 		itemList.put("package",z);
-		
+
 		z = new Item("A few precious wafers of lembas.");
 		z.foodpoints = 20;
 		z.descrRoom = "A package of lembas. Someone from Middle Earth was here.";
@@ -179,7 +179,7 @@ class Item {
 		itemList.put("crystals",z);
 		roomList.get("treasury").items.add("crystals");
 		roomList.get("cave2").items.add("crystals");
-		
+
 		z = new Item("The crystal is about 6 inches long and glows green or yellow "
 				+ "with a brightness that responds to your mental command to it!.");
 		z.descrRoom = ("One of the crystals from the cave has has broken off the wall and is glowing.");
@@ -235,7 +235,7 @@ class Item {
 		z.descrActive = "A silver bell with an emerald clapper.";
 		z.descrRoom = "A silver bell lies on the floor."; 
 		itemList.put("bell", z);
-		
+
 		z = new Item("The wall is has messages (graffiti?) carvared into it. You can decipher the meaning!");
 		z.isCarryable = false;
 		z.descrRoom = "The west wall is covered with some sort of writing";
@@ -248,11 +248,28 @@ class Item {
 				+ "<><><><><><><><>\n";
 		itemList.put("wall", z);
 		roomList.get("cave3").items.add("wall");
-		
+
 		z = new Item("The murals are fascinating, but your brain cannot comprehend what they are intended to depict.");
 		z.isCarryable = false;
 		itemList.put("mural", z);
 		roomList.get("secret_room").items.add("mural");
+
+		/*
+		z = new Item("The basket contains a serving of khao niao.");
+		z.foodpoints = 11;
+		z.isCarryable = false;
+		z.descrRoom = "You notice a small bamboo basket emitting a lovely aroma.";
+		itemList.put("khao niao",z);
+		itemList.put("basket",z);
+		roomList.get("forest2").items.add("khao niao");
+		roomList.get("forest2").items.add("basket");
+		 */
+		
+		z = new Item("Hey it's a mangosteen! ");
+		z.foodpoints = 11;
+		z.descrRoom = "You notice a small purple fruit in the bushes.";
+		itemList.put("fruit",z);
+		roomList.get("forest2").items.add("fruit");		
 
 	}
 

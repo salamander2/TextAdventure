@@ -250,6 +250,10 @@ public class AdventureMain {
 		case "put":  
 			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
 			//TODO: add player.update()
+			if (word3.equals("in")) {
+				putObject(word2, word4);
+			}
+			
 			//This does not work EXCEPT for these two special commands
 			if (text.startsWith("put emerald in bell")) activate("bell");
 			//special lake command
@@ -271,7 +275,7 @@ public class AdventureMain {
 			else System.out.println("I'm not sure how to do that.");
 			break;
 			
-		//TODO: fix "use"
+		//TODO: fix "use" - is there anything else to use?
 		case "use":
 			if (text.startsWith("use hammer to") && text.contains("rock")) {
 				activate("hammer");
@@ -699,6 +703,44 @@ public class AdventureMain {
 		} else {
 			System.out.printf("There is no %s is in the %s.%n", itemName, container);
 		}				
+	}
+	
+	//PUT A INTO B
+	void putObject(String itemName, String container) {
+		if (! itemPresent(itemName)) {
+			System.out.println("You don't have " + itemName + " in your inventory (and it's not in the current location either.");
+			return;
+		}
+		Room r = allRooms.get(currentRoom);
+		if (! r.items.contains(container)) {		
+			System.out.println("There is no " + container + " here.");
+			return;
+		}
+
+		Item it2 = itemMap.get(container);
+		if (! it2.isOpen) {
+			System.out.println("Sorry, the " + container + " is not open.");
+			return;
+		}
+		
+		//FIXME The container needs to be empty - as it can only contain only one thing
+		if (! it2.itemContained.equals("")) {
+			System.out.printf("The %s needs to be empty.%n", container);
+			return;
+		}
+	/*	
+		if (it2.itemContained.equals(itemName)) {
+			//itemList.get(container).itemContained = "";
+			
+			inventory.remove(itemName);
+			it2.itemContained = "";	//TODO does this remove it from the item??
+			System.out.println("You add the " + itemName + " to your backpack.");
+			player.update();
+
+		} else {
+			System.out.printf("There is no %s is in the %s.%n", itemName, container);
+		}
+	*/				
 	}
 
 	void dropObject(String item) {
