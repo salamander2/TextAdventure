@@ -35,7 +35,9 @@ class Item {
 	String descrLook = ""; //description of item when you look at it.
 
 	String descrRead = "";	//what is displayed when you read the item. If empty, then there is nothing that you can read on it.
+	
 	private int foodpoints = 0;		//how many food points the food has (0=not edible)
+	boolean regenFood = false; 		//only the mangosteen bush has infinite food.
 
 	/* tool related properties */
 	private boolean isActivated = false;
@@ -278,16 +280,17 @@ class Item {
 		 */
 		
 		z = new Item("Hey it's a mangosteen!");
-		z.foodpoints = 11;
-		z.descrRoom = "You notice a small purple fruit in the bushes.";
+		z.foodpoints = 6;
+		z.regenFood = true;
+		z.descrRoom = "You notice a bush full of purple fruit.";
 		itemList.put("fruit",z);
-		roomList.get("forest2").items.add("fruit");		
+		roomList.get("maze7").items.add("fruit");		
 
 		z = new Item("I do believe that it's kimchi");
 		z.foodpoints = 16;
 		z.descrRoom = "You notice a something smelly in the bushes.";
 		itemList.put("kimchi",z);
-		roomList.get("maze5").items.add("kimchi");		
+		roomList.get("forest2").items.add("kimchi");		
 
 	}
 

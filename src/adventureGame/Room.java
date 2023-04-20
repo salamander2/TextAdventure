@@ -107,8 +107,12 @@ public class Room{
 		roomList.put("maze5",r);
 		
 		r = new Room("Gloomy forest path",	"You are in a gloomy part of the forest with narrow windy paths in many directions.");
-		r.setExits("maze6","maze3","forest1","maze4", "","");
+		r.setExits("maze7","maze3","forest1","maze4", "","");
 		roomList.put("maze6",r);
+		
+		r = new Room("Gloomy forest path",	"You are in a gloomy part of the forest with narrow windy paths in many directions.");
+		r.setExits("","maze6","maze5","", "","");
+		roomList.put("maze7",r);
 		
 		r = new Room("Forest path", 
 				"There appears to be a clearing to the north. A cave is to the west. "

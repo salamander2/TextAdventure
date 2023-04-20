@@ -43,7 +43,7 @@ public class AdventureMain {
 		System.out.print("Please type your firstname: (press enter for \"Zena\") ");
 		String name = getCommand();
 		if (name.equals("qwerty")) name = "Zena";
-		player = new Player(name); //make a new player with given name		
+		player = new Player(name);		
 
 		startingMessage();
 
@@ -531,9 +531,10 @@ public class AdventureMain {
 		}
 		//is item in current room? eat that item first.
 		Room r = allRooms.get(currentRoom);
-		if (r.items.contains(itemname)) {			
-			if (! player.eat(itemname, itemMap.get(itemname))) return;				
-			r.items.remove(itemname);
+		if (r.items.contains(itemname)) {
+			Item z = itemMap.get(itemname);
+			if (! player.eat( itemname, z)) return;	
+			if (!z.regenFood ) r.items.remove(itemname);
 			player.update();
 			return;				
 		}
@@ -608,7 +609,8 @@ public class AdventureMain {
 		System.out.println("You see a vision of a map! It looks the north maze.");
 		thsleep(600);
 		String s = "\n\n";
-		s+="                               &         \n";
+		s+="                              ???        \n";
+		s+="                               |         \n";
 		s+="             forest <<--------[6]********\n";
 		s+="                               |        *\n";
 		s+="                               |        *\n";

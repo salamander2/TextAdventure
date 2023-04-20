@@ -1,5 +1,6 @@
 Version information
 
+v1.9
 DONE:
   flashlight
   treasure door
@@ -12,15 +13,14 @@ DONE:
   close command seems to work
   put command works (but only 1 item can go into a container)
   cut paper works: make smaller papers with words that are various colours.
+  use command: hammer only. Anything else?
+  
   
 TO FIX:   
 * throw knife at goblin
 * the earthquake should make the chest appear in the treasury 
   X It's fine in the secret room, revealed by "move lever".
   But this won't work if the other lever is connected to this one.
-   
-* double check 
-	use command: what else should be used?
 	
 * allow containers to hold more than one item.
 
