@@ -113,7 +113,7 @@ class Item {
 		
 		z = new Item("a small blue paper with writing on it");
 		z.descrRoom = "There's a bluepaper stuck on a thorn bush";
-		z.descrRead = "THe emerald is in a rock.";
+		z.descrRead = "The emerald is in a rock.";
 		itemList.put("bluepaper",z);
 
 		z = new Item("a pile of dusty leaves");
@@ -181,7 +181,7 @@ class Item {
 		itemList.put("package",z);
 
 		z = new Item("A few precious wafers of lembas.");
-		z.foodpoints = 20;
+		z.foodpoints = 21;
 		z.descrRoom = "A package of lembas. Someone from Middle Earth was here.";
 		itemList.put("lembas",z);
 
@@ -277,11 +277,17 @@ class Item {
 		roomList.get("forest2").items.add("basket");
 		 */
 		
-		z = new Item("Hey it's a mangosteen! ");
+		z = new Item("Hey it's a mangosteen!");
 		z.foodpoints = 11;
 		z.descrRoom = "You notice a small purple fruit in the bushes.";
 		itemList.put("fruit",z);
 		roomList.get("forest2").items.add("fruit");		
+
+		z = new Item("I do believe that it's kimchi");
+		z.foodpoints = 16;
+		z.descrRoom = "You notice a something smelly in the bushes.";
+		itemList.put("kimchi",z);
+		roomList.get("maze5").items.add("kimchi");		
 
 	}
 

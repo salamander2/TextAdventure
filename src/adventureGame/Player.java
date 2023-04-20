@@ -58,6 +58,7 @@ public class Player {
 			return true;
 		}
 		System.out.println("Mmmm... yummy.");
+		if (Math.random() < 0.4) System.out.println("Burp.");
 		return true;
 	}
 

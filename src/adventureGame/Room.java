@@ -81,7 +81,8 @@ public class Room{
 		roomList.put("tree1",r);
 		
 		r = new Room("Partway up a huge tree", 
-				"It is getting a lot harder to climb. Perhaps you should stop now.");
+				"It is getting a lot harder to climb. Perhaps you should stop now. "
+				+ "\nThe words \"FIND BATTERY\" are carved into the bark.");
 		r.setExits("", "","tree1", "tree1", "r_fallFromTree","maze2");				
 		roomList.put("tree1b",r);
 		

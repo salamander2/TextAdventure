@@ -37,7 +37,7 @@ public class AdventureMain {
 		Item.setUpItems(itemMap, allRooms);
 
 		//DEBUG: 
-		inventory.add("batteries");
+		//inventory.add("batteries");
 
 		String command = "";
 		System.out.print("Please type your firstname: (press enter for \"Zena\") ");
