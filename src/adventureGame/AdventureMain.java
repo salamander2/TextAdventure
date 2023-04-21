@@ -36,9 +36,6 @@ public class AdventureMain {
 		Room.setupRooms(allRooms);
 		Item.setUpItems(itemMap, allRooms);
 
-		//DEBUG: 
-		//inventory.add("batteries");
-
 		String command = "";
 		System.out.print("Please type your firstname: (press enter for \"Zena\") ");
 		String name = getCommand();
@@ -46,6 +43,11 @@ public class AdventureMain {
 		player = new Player(name);		
 
 		startingMessage();
+
+		if (player.name.contentEquals("Gandalf")) {
+			System.out.println("You have entered 'wizard' mode: free batteries!");
+			inventory.add("batteries");
+		}
 
 		/*  for ANSI screen controls -- which don't work in Windows.
 		char escCode = 0x1B;
@@ -118,8 +120,13 @@ public class AdventureMain {
 		text = text.replaceAll(" into ", " in ");
 		text = text.replaceAll(" rocks", " rock");
 		text = text.replaceAll("pick up", "pickup");
+		text = text.replaceAll("place", "put");
+		//NOTE: for now, push and pull can be mapped to move.
+		text = text.replaceAll("push", "move");
+		text = text.replaceAll("pull", "move");
 		text = text.replaceAll("look at", "lookat");
 		text = text.replaceAll("climb up", "climbup");
+		
 
 		//No. we have to allow "turn on flashlight" as well as "turn flashlight on"
 		//text = text.replaceAll("turn on", "turnon");
@@ -201,20 +208,7 @@ public class AdventureMain {
 			// *** two word commands ***
 		case "climbup":
 		case "climb":
-			if (word2.equals("")) {
-				System.out.println("What do you want to climb?");
-				break;
-			}
-			if (word2.equals("tree")) {
-				if (currentRoom.equals("forest1")) {
-					System.out.println("You start climbing ...");
-					moveToRoom('u');
-				} else {
-					System.out.println("There is no climbable tree here.");					
-				}
-			} else {
-				System.out.println("You can't climb that.");				
-			}
+			climb(word2);
 			break;
 		case "read":
 			readObject(word2);
@@ -290,7 +284,7 @@ public class AdventureMain {
 				activate("hammer");
 				break;
 			}
-			System.out.println("Sorry, I don't understand that command.");
+			System.out.println("Oops. I don't understand how to use that.");
 			//activate(word2);
 			break;
 		case "close":
@@ -317,7 +311,7 @@ public class AdventureMain {
 				flashlight(word2, word3);
 				break;
 			}
-			else System.out.println("Sorry, I don't understand what you want to do.");
+			else System.out.println("Sorry, I don't understand what you want to turn.");
 			break;
 		case "ring":
 			ringBell(word2);
@@ -594,11 +588,43 @@ public class AdventureMain {
 				+ "... except possibly at the lowest point in the game.");
 	}
 
+	void climb(String word2) {
+		System.out.println("** TIP: you can use Up and Down instead of \"climb\". **");
+		
+		if (currentRoom.equals("cave1")) {
+			System.out.println("You carefully climb the steep rockface");
+			moveToRoom('u');	
+			return;
+		}
+		if (currentRoom.equals("chimney")) {
+			System.out.println("TIP: you can use Up and Down instead of \"climb\".");
+			System.out.println("You climb DOWN the crack ...");
+			moveToRoom('d');	
+			return;
+		}
+		if (word2.equals("")) {
+			System.out.println("What do you want to climb?");
+			return;
+		}
+		if (word2.equals("tree")) {
+			if (currentRoom.equals("forest1")) {
+				System.out.println("You start climbing ...");
+				moveToRoom('u');
+			} else {
+				System.out.println("There is no climbable tree here.");					
+			}
+			return;
+		}
+		
+		System.out.println("You can't climb that.");				
+	}
+	
 	void pray() {
 		System.out.println("In utter desperation you pray to the divinity.\n "
 				+ "This takes a lot of effort to get it to actually work.\n ... ");
 		thsleep(600);
 		System.out.println("\nAre you sure you want to do this? You might get injured.");
+		System.out.println("(The only real reason for praying is if you're lost in the gloomy forest maze.)");
 		char ans = getCommand().toUpperCase().charAt(0);
 		if (ans != 'Y') {
 			System.out.println("okay then");
@@ -611,7 +637,7 @@ public class AdventureMain {
 		String s = "\n\n";
 		s+="                              ???        \n";
 		s+="                               |         \n";
-		s+="             forest <<--------[6]********\n";
+		s+="          to forest <<--------[6]********\n";
 		s+="                               |        *\n";
 		s+="                               |        *\n";
 		s+="    @@@@@@@@@@@@@@@[4]*********|*********\n";
@@ -630,7 +656,7 @@ public class AdventureMain {
 		s+="    .......[2]$$$$$$$                    \n";
 		s+="            ^                            \n";
 		s+="            ^                            \n";
-		s+="     down tree (otherside)               \n";
+		s+="     down tree (otherside)               \n\n";
 
 		System.out.println(s);
 	}
@@ -682,7 +708,7 @@ public class AdventureMain {
 				+ "Try simple commands to do things. You can move in the cardinal directions\n"
 				+ " as well as vertically by typing in the appropriate word (e.g. north, up or just n and u)."
 				+ "\nOther common adventure game commands work here too: "
-				+ "\nlook, inventory, move, take (and 'take all'), drop, eat, drink, pray, cut, ...");
+				+ "\nlook, inventory, move, take (and 'take all', and 'take A from B'), drop, eat, drink, pray, cut, ...");
 		System.out.println("There's a way to get more help if you're stuck, and there are 3 clues.");
 		System.out.println("*******************************************************************************");
 	}

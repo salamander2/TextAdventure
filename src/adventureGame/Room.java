@@ -126,9 +126,9 @@ public class Room{
 		roomList.put("forest2",r);	
 		
 		r = new Room("Entrance to cave",
-				"You have come to the side of a mountain and are standing at the entrance to a dark cave. "
-				+ "A path is to the east and the cave goes further on to the west");
-		r.setExits("", "","cave2", "path1", "","");
+				"You have come to the side of a rocky mountain and are standing at the entrance to a dark cave. "
+				+ "\nA path is to the east and the cave goes further on to the west");
+		r.setExits("", "","cave2", "path1", "controlRoom","");
 		roomList.put("cave1",r);
 
 		r= new Room("Sparkling cave",
@@ -197,6 +197,12 @@ public class Room{
 		r.setExits("", "","", "", "chimney3","");
 		r.isDark = true;		
 		roomList.put("black_lake", r);
+		
+		r = new Room("Room in rock face",
+				"You managed to climb up the rock a way and found a small room carved into the side of the mountain."
+				+ "\n You have a 50-50 chance of climbing down without injury");
+		r.setExits("", "","", "", "","cave1");
+		roomList.put("controlRoom",r);
 
 /*
 		//List all rooms	

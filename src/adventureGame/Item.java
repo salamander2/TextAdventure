@@ -21,6 +21,7 @@ class Item {
 				{"lake", "water"},
 				{"batteries", "battery"},
 				{"flashlight", "torch"},
+				{"murals", "mural"},
 		};
 		for (int i = 0; i < synonyms.length; i++) {
 			//					    original (synonym),		replacement (correct)
@@ -99,7 +100,8 @@ class Item {
 
 		z = new Item("A carefully folded piece of paper with writing on it.");
 		z.descrRoom= "Some pieces of paper have blown under a bush.";
-		z.descrRead = "To return to your world, you need to ring the silver bell in the special location.";
+		z.descrRead = "To return to your world, you need to ring the silver bell in the special location."
+				+ "\n <--- CUT HERE --->";
 		itemList.put("paper",z);
 		roomList.get("maze2").items.add("paper");
 		
