@@ -288,7 +288,8 @@ class Item {
 
 		z = new Item("I do believe that it's kimchi");
 		z.foodpoints = 16;
-		z.descrRoom = "You notice a something smelly in the bushes.";
+		z.descrRoom = "You notice a something smelly in the bushes.\n"
+				+ "Could it be a type of Korean food?";
 		itemList.put("kimchi",z);
 		roomList.get("forest2").items.add("kimchi");		
 

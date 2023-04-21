@@ -179,7 +179,7 @@ public class AdventureMain {
 			break;	
 		case "look":
 			lookAtRoom(true);
-			player.update();
+			//player.update();
 			break;
 		case "search":
 			search();
@@ -427,7 +427,7 @@ public class AdventureMain {
 
 			if (it.isActivated()) System.out.println(it.descrActive);
 			else System.out.println(it.descrLook);
-			player.update();
+			//player.update();
 			return;
 		}
 		//is item in current room?
@@ -441,7 +441,7 @@ public class AdventureMain {
 				else System.out.println("and it contains a " + q.itemContained);							
 			}
 			else System.out.println(q.descrLook);	
-			player.update();
+			//player.update();
 			return;
 		}
 		//TODO: containers - all open containers must be searched 
@@ -680,8 +680,9 @@ public class AdventureMain {
 		System.out.println("\n*******************************************************************************");
 		System.out.println("You're in a strange land and have to complete a quest/puzzle to get home again.\n"
 				+ "Try simple commands to do things. You can move in the cardinal directions\n"
-				+ " as well as vertically by typing in the appropriate word."
-				+ "\nOther common adventure game commands work here too: look, inventory, move, take, drop ...");
+				+ " as well as vertically by typing in the appropriate word (e.g. north, up or just n and u)."
+				+ "\nOther common adventure game commands work here too: "
+				+ "\nlook, inventory, move, take (and 'take all'), drop, eat, drink, pray, cut, ...");
 		System.out.println("There's a way to get more help if you're stuck, and there are 3 clues.");
 		System.out.println("*******************************************************************************");
 	}

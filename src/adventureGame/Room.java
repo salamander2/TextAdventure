@@ -69,14 +69,14 @@ public class Room{
 		
 		r = new Room("Forest path", 
 				"You are on a path in the forest. "
-				+ "A very tall tree completely blocks the path to the north. "
+				+ "A very tall tree completely blocks the path to the north. There are some low hanging branches. "
 				+ "There is a path to the south.");
 		r.setExits("", "clearing","", "", "tree1","");
 		roomList.put("forest1",r);
 		
 		r = new Room("Partway up a huge tree", 
 				"It is getting a lot harder to climb. Perhaps you should stop now."
-				+ "\nSomeone has carved your initials here.");
+				+ "\nSomeone has carved a double-headed horizontal arrow here.");
 		r.setExits("", "","tree1b", "tree1b", "r_fallFromTree","forest1");				
 		roomList.put("tree1",r);
 		
