@@ -295,9 +295,9 @@ class Item {
 		 */
 		
 		z = new Item("Hey it's a mangosteen!");
-		z.foodpoints = 6;
-		z.regenFood = true;
 		z.descrRoom = "You notice a bush full of purple fruit.";
+		z.foodpoints = 6;
+		z.regenFood = true;		
 		itemList.put("fruit",z);
 		roomList.get("maze7").items.add("fruit");		
 
