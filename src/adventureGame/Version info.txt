@@ -17,6 +17,7 @@ DONE:
   throw (knife)
   goblin
   harmonized method names. Most "Object" has been changed to "Item".
+  fixed put command
   
 TO FIX:   
 * the earthquake should make the chest appear in the treasury 

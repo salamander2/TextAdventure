@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class AdventureMain {
 
-	static int INVSIZE = 10; //size of inventory	
+	static int INVSIZE = 8; //size of inventory	
 	//instance variables
 	HashMap<String,Room> allRooms = new HashMap<String,Room>();
 	HashMap<String, Item> itemMap = new HashMap<String,Item>(); //list of all item objects
@@ -159,8 +159,9 @@ public class AdventureMain {
 		if (words.length > 2) word3 = words[2]; 
 		if (words.length > 3) word4 = words[3]; 
 
-		//special case for "rock2".  Note, all rocks are called "rock".
-		//TODO: explain, what does this do?
+		//Special case for "rock".  Note, all rocks are called "rock".
+		//There are [rock] items in a couple of rooms. There is also a special rock called ["rock"].
+		//If you're in that room, this translates rock --> "rock".
 		if (word2.equals("rock") && allRooms.get(currentRoom).items.contains("\"rock\"")) word2 = "\"rock\"";
 		if (word3.equals("rock") && allRooms.get(currentRoom).items.contains("\"rock\"")) word3 = "\"rock\"";
 
@@ -252,10 +253,10 @@ public class AdventureMain {
 			moveItem(word2);
 			break;
 		case "put":  
-			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
-			//TODO: add player.update()
+			//put A in B  (why would anyone do this?) "put hammer in chest"
 			if (word3.equals("in")) {
 				putItem(word2, word4);
+				break;
 			}
 			
 			//This does not work EXCEPT for these two special commands
@@ -282,7 +283,7 @@ public class AdventureMain {
 		case "throw":
 			throwItem(word2);
 			break;
-		//TODO: fix "use" - is there anything else to use?
+		//Is there anything else to use?
 		case "use":
 			if (text.startsWith("use hammer to") && text.contains("rock")) {
 				activateItem("hammer");
@@ -521,7 +522,7 @@ public class AdventureMain {
 
 	}
 	
-	//Note: this method actually does the eating in the player class.
+	//Note: The method that actually does the eating is in the player class.
 	void eatItem(String itemname) {
 		if (itemname.equals("")){
 			System.out.println("eat what?");
@@ -832,7 +833,7 @@ public class AdventureMain {
 				return;
 			}
 			inventory.add(itemName);
-			it2.itemContained = "";	//TODO does this remove it from the item??
+			it2.itemContained = "";	
 			System.out.println("You add the " + itemName + " to your backpack.");
 			player.update();
 
@@ -859,24 +860,16 @@ public class AdventureMain {
 			return;
 		}
 		
-		//FIXME The container needs to be empty - as it can only contain only one thing
+		//The container needs to be empty - as it can only contain only one thing
 		if (! it2.itemContained.equals("")) {
 			System.out.printf("The %s needs to be empty.%n", container);
 			return;
 		}
-	/*	
-		if (it2.itemContained.equals(itemName)) {
-			//itemList.get(container).itemContained = "";
-			
-			inventory.remove(itemName);
-			it2.itemContained = "";	//TODO does this remove it from the item??
-			System.out.println("You add the " + itemName + " to your backpack.");
-			player.update();
-
-		} else {
-			System.out.printf("There is no %s is in the %s.%n", itemName, container);
-		}
-	*/				
+		
+		it2.itemContained = itemName;
+		inventory.remove(itemName);
+		System.out.println("You put the " + itemName + " in the " + container + ".");
+		player.update();
 	}
 
 	void dropItem(String item) {
@@ -1002,7 +995,7 @@ public class AdventureMain {
 		//player.update();  <-- this is in setActivate()
 	}
 
-	//TODO: what objects get activated? (by opening?)
+	//What objects get activated? (by opening?)
 	//rock: hit rock with hammer or open rock with hammer, or smash rock with hammer
 	//lake (in black_lake room)
 	//hammer
@@ -1026,18 +1019,18 @@ public class AdventureMain {
 		player.update();
 	}
 
-	//TODO fix this method.
-	void openStuff(String w2, String w3, String w4)
+	
+	void openStuff(String word2, String w3, String w4)
 	{
-		//we know that w2 is not empty.
+		//we know that w2 is not empty
 
 		//open A, open A with B			
 		if (w3.equals("with") && w4.length() > 0) {
-			//openObject(w2, w4);
-			openObject(w2);
+			//openObject(word22, w4);
+			openObject(word2); //yeah, we don't really need word4.
 		}	
 		else {
-			openObject(w2);
+			openObject(word2);
 			//else activate(word2);
 		}
 	}
