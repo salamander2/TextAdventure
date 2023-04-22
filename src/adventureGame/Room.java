@@ -69,8 +69,8 @@ public class Room{
 		
 		r = new Room("Forest path", 
 				"You are on a path in the forest. "
-				+ "A very tall tree completely blocks the path to the north. There are some low hanging branches. "
-				+ "There is a path to the south.");
+				+ "\nA very tall tree completely blocks the path to the north. There are some low hanging branches. "
+				+ "\nThere is a path to the south.");
 		r.setExits("", "clearing","", "", "tree1","");
 		roomList.put("forest1",r);
 		
@@ -143,15 +143,19 @@ public class Room{
 		r.isDark = true;		
 		roomList.put("cave3", r);
 		
+		//                     secret-room
+		// CAVE2 --- TUNNEL1 --- TUNNEL2 --X(goblin)-- TUNNEL3 (door) --- DWARF TREASURY
+		
 		r = new Room("Tunnel","a slippery tunnel connecting parts of the cave system.");
 		r.setExits("cave2", "tunnel2","cave2", "", "","");
 		r.isDark = true;		
 		roomList.put("tunnel1", r);
 
 		r = new Room("Tunnel","a long slippery tunnel sloping slightly downwards.");
-		r.setExits("tunnel1", "tunnel3","", "", "secret_room","");
+		//r.setExits("tunnel1", "tunnel3","", "", "secret_room","");
+		r.setExits("tunnel1", "","", "", "secret_room","");
 		r.isDark = true;		
-		//make a secret exit up top -- a single room with a hidden chest?
+		//make a secret exit up top -- a single room with a hidden chest
 		roomList.put("tunnel2", r);
 		
 		r = new Room("Secret Room", "You found a secret room with beautiful murals. "
@@ -161,7 +165,7 @@ public class Room{
 		
 		r = new Room("Tunnel","a slippery tunnel."
 				+ "\nAt the south end is a room whose entrance is blocked by massive iron door that is off its hinges,"
-				+ "\nbut, it looks like you can squeeze past it.");
+				+ "\nbut, it looks like you can squeeze past it (maybe).");
 		r.setExits("tunnel2", "","", "", "","");
 		r.isDark = true;		
 		roomList.put("tunnel3", r);
@@ -200,8 +204,8 @@ public class Room{
 		
 		r = new Room("Room in rock face",
 				"You managed to climb up the rock a way and found a small room carved into the side of the mountain."
-				+ "\n You have a 50-50 chance of climbing down without injury");
-		r.setExits("", "","", "", "","cave1");
+				+ "\n(You have a good chance of climbing down without injury.)");
+		r.setExits("", "","", "", "r_fallFromCliff","cave1");
 		roomList.put("controlRoom",r);
 
 /*

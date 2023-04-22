@@ -14,22 +14,22 @@ DONE:
   put command works (but only 1 item can go into a container)
   cut paper works: make smaller papers with words that are various colours.
   use command: hammer only. Anything else?
-  
+  throw (knife)
+  goblin
+  harmonized method names. Most "Object" has been changed to "Item".
   
 TO FIX:   
-* throw knife at goblin
 * the earthquake should make the chest appear in the treasury 
   X It's fine in the secret room, revealed by "move lever".
   But this won't work if the other lever is connected to this one.
 	
-* allow containers to hold more than one item.
+* Allow containers to hold more than one item (is this necessary?).
+  What happens if you put two things into one container?
 
-** Test every object and every room.
-
-* make southern forest with hole that drops you down to crystal cave. You get a crystal as a light.
-* should this only open up if you use the earthquake lever? The cave closes but the southern forest opens up.
- This then provides an alternate route down, along with being trapped down there.
-  Then the earthquake lever would have to be in a hollow above the cave that you climb up to. (or it could be connected to the one down below)
+* Make earthquake lever in control room on cliff. It closes the cave in a rockfall, and opens the southern forest.
+  It also disables the earthquake lever in the secret room. The chest still appears (somewhere).
+* Make southern forest with hole that drops you down to crystal cave. You get a crystal as a light.
+ This then provides an alternate route down, along with being trapped down there since you cannot climb up again.  
  * crystal will have to also light up the room.
   
 

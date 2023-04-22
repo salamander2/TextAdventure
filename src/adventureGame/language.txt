@@ -1,6 +1,8 @@
 Language parser improvements
 ============================
 
+>> This has not been updated <<
+
 1. Single words:
 - any single word that is not on the list "I don't understand that command"
 

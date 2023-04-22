@@ -45,7 +45,9 @@ public class AdventureMain {
 		startingMessage();
 
 		if (player.name.contentEquals("Gandalf")) {
-			System.out.println("You have entered 'wizard' mode: free batteries!");
+			System.out.println("\n............\n"
+					+ "You have entered 'wizard' mode: free batteries!"
+					+ "\n............\n");
 			inventory.add("batteries");
 		}
 
@@ -211,7 +213,7 @@ public class AdventureMain {
 			climb(word2);
 			break;
 		case "read":
-			readObject(word2);
+			readItem(word2);
 			break;
 		case "lookat":
 		case "examine":
@@ -227,18 +229,18 @@ public class AdventureMain {
 			cutItem(word2);
 			break;
 		case "pickup":
-			takeObject(word2);
+			takeItem(word2);
 			break;		
 		case "take":
 			//take B, take B from A
 			if (word3.equals("from")) {
-				takeObject(word2, word4);
+				takeItem(word2, word4);
 			} else {
-				takeObject(word2);
+				takeItem(word2);
 			}
 			break;
 		case "drop":
-			dropObject(word2);
+			dropItem(word2);
 			break;
 		case "eat":
 			eatItem(word2);
@@ -249,22 +251,21 @@ public class AdventureMain {
 		case "move": //move an item. These are things you can't pick up.
 			moveItem(word2);
 			break;
-			//FIXME
 		case "put":  
 			//TODO: put A in B  (why would anyone do this?) "put hammer in chest"
 			//TODO: add player.update()
 			if (word3.equals("in")) {
-				putObject(word2, word4);
+				putItem(word2, word4);
 			}
 			
 			//This does not work EXCEPT for these two special commands
-			if (text.startsWith("put emerald in bell")) activate("bell");
+			if (text.startsWith("put emerald in bell")) activateItem("bell");
 			//special lake command
-			else if (currentRoom.equals("black_lake") && text.startsWith("put hand in lake")) activate("lake");
+			else if (currentRoom.equals("black_lake") && text.startsWith("put hand in lake")) activateItem("lake");
 			else System.out.println ("huh?");
 			break;
 		case "reach":
-			if (currentRoom.equals("black_lake") && text.startsWith("reach in lake")) activate("lake");
+			if (currentRoom.equals("black_lake") && text.startsWith("reach in lake")) activateItem("lake");
 			break;
 		case "smash":
 		case "break":
@@ -272,16 +273,19 @@ public class AdventureMain {
 			//"break rock with hammer"  or "break rock" while you have a hammer
 //			if (text.contains ("rock")) {	
 			if(text.contains("with hammer") || inventory.contains("hammer")) {
-				activate("hammer");
+				activateItem("hammer");
 			}
 			
 			else System.out.println("I'm not sure how to do that.");
 			break;
 			
+		case "throw":
+			throwItem(word2);
+			break;
 		//TODO: fix "use" - is there anything else to use?
 		case "use":
 			if (text.startsWith("use hammer to") && text.contains("rock")) {
-				activate("hammer");
+				activateItem("hammer");
 				break;
 			}
 			System.out.println("Oops. I don't understand how to use that.");
@@ -442,7 +446,7 @@ public class AdventureMain {
 		System.out.println("That object does not exist (here).");	
 	}
 
-	void readObject(String itemname) {
+	void readItem(String itemname) {
 		if (itemname == "") {
 			System.out.println("Read what?");
 			return;
@@ -566,6 +570,42 @@ public class AdventureMain {
 		}
 	}
 
+	void throwItem(String item) {
+		if (! item.equals("knife")) {
+			System.out.println("From a very early age, "
+					+ "the only thing that you have been proficient at throwing is very sharp knives.");
+			return;
+		}
+		if (!itemPresent("knife")) {
+			System.out.println("You don't have a knife handy");
+			return;
+		}
+		if (! currentRoom.equals("tunnel2")) {
+			System.out.println("You throw the knife "
+					+ "and hear a satisfying thunk as it embeds itself in a nearby piece of wood.");
+			if (inventory.contains("knife")) {
+				inventory.remove(item);
+				allRooms.get(currentRoom).items.add(item);
+			}
+			player.update();
+			return;
+		}
+		
+		//You have the knife and you are in the room with the goblin
+		System.out.println("You throw the deadly knife at the goblin."
+				+ "\nQuick as a flash, the goblin snatches it in mid air and thrusts it into his belt."
+				+ "\n\"You found my favourite knife\" he croaks.");
+		System.out.println("Then he looks upwards significantly, and vanishes into the rock.");
+		System.out.println("In gratitude, there's a bag of gold left behind");
+		Room r = allRooms.get(currentRoom);
+		r.items.remove("goblin");
+		r.items.remove("knife");
+		inventory.remove("knife");
+		r.items.add("gold");
+		r.setExits("tunnel1", "tunnel3","", "", "secret_room","");
+		player.update();
+	}
+	
 	void search() {
 		if (currentRoom.contentEquals("black_lake")) {
 			Room r = allRooms.get(currentRoom);			
@@ -727,13 +767,13 @@ public class AdventureMain {
 				index++;
 				continue;
 			}
-			takeObject(eachItem);
+			takeItem(eachItem);
 		}
 		System.out.println("Everything in this location has been added to your backpack.");
 		player.update();
 	}
 
-	void takeObject(String itemName) {
+	void takeItem(String itemName) {
 		if (inventory.size() > INVSIZE) {
 			System.out.println("Your inventory is full. Drop something first.");
 			return;
@@ -760,11 +800,16 @@ public class AdventureMain {
 		r.items.remove(itemName);
 		inventory.add(itemName);
 		System.out.println("You add the " + itemName + " to your backpack.");
+		
+		//special case to change the descrLook text:
+		if (itemName.equals("knife")) {
+			itemMap.get(itemName).descrRoom = "A sharp knife lies in the dirt.";
+		}
 		player.update();
 	}
 
 	//TAKE A FROM B
-	void takeObject(String itemName, String container) {
+	void takeItem(String itemName, String container) {
 		Room r = allRooms.get(currentRoom);
 		if (! r.items.contains(container)) {		
 			System.out.println("There is no " + container + " here.");
@@ -797,7 +842,7 @@ public class AdventureMain {
 	}
 	
 	//PUT A INTO B
-	void putObject(String itemName, String container) {
+	void putItem(String itemName, String container) {
 		if (! itemPresent(itemName)) {
 			System.out.println("You don't have " + itemName + " in your inventory (and it's not in the current location either.");
 			return;
@@ -834,7 +879,7 @@ public class AdventureMain {
 	*/				
 	}
 
-	void dropObject(String item) {
+	void dropItem(String item) {
 		if (item.equals("all")) {
 			while(inventory.size() > 0) {
 				String nextItem = inventory.get(0);
@@ -962,7 +1007,7 @@ public class AdventureMain {
 	//lake (in black_lake room)
 	//hammer
 	//bell
-	void activate(String itemName) {
+	void activateItem(String itemName) {
 		//exit if it is not in the room and not in the inventory
 		if (! itemPresent(itemName)) {
 			System.out.println("You don't have " + itemName + " in your inventory (and it's not in the current location either.");
@@ -1119,6 +1164,15 @@ public class AdventureMain {
 		lookAtRoom(false);
 		player.update();
 	}
+	
+	void fallFromCliff(){
+		System.out.println("What a dumb idea to climb higher. "
+				+ "\nYou slip and fall down to the ground, your hands are now bloody and you broke a nail!");
+		player.injury(5);
+		currentRoom = "cave1";
+		lookAtRoom(false);
+		player.update();
+	}
 
 	void getFromLake() {
 		System.out.println("You feel around in the dark water and pull up a small metal object.");
@@ -1164,9 +1218,7 @@ public class AdventureMain {
 	void moveLeaves() {
 		System.out.println("[cough][cough] These leaves are too dusty. A drink would help.");
 		player.injury(10); //for choking dust
-		player.isThirsty = true;
-		//Why??
-		//if (roomList.get(currentRoom).items.contains("hammer")) player.injury(10);	 
+		player.isThirsty = true;	 
 	}
 
 	void useHammer() {

@@ -178,7 +178,7 @@ class Item {
 		itemList.put("chest",z);
 		//add to a room
 
-		z = new Item("It looks elven. Someone from Middle Earth was here.");
+		z = new Item("It looks elven. Someone from Middle Earth was here. I wonder what it contains?");
 		z.descrRoom = "A dirty package wrapped in leaves is wedged under the door.";
 		z.isContainer = true;
 		z.itemContained = "lembas";
@@ -269,6 +269,19 @@ class Item {
 		z.isCarryable = false;
 		itemList.put("mural", z);
 		roomList.get("secret_room").items.add("mural");
+		
+		z = new Item("The goblin is glowering at you. "
+				+ "\nIt has large claws, various weapons, and looks like it does not intend to move. "
+				+ "\nBest not to get too close to it.");
+		z.descrRoom = "There's a fierce looking goblin blocking the tunnel to the south.";
+		z.isCarryable = false;
+		itemList.put("goblin", z);
+		roomList.get("tunnel2").items.add("goblin");
+		
+		//this will be dropped by the goblin.
+		z = new Item("A small leather bag containing 13 gold coins");
+		z.descrRoom = "There's a small bag of gold in the corner of the room";
+		itemList.put("gold", z);
 
 		/*
 		z = new Item("The basket contains a serving of khao niao.");
@@ -293,7 +306,16 @@ class Item {
 		z.descrRoom = "You notice a something smelly in the bushes.\n"
 				+ "Could it be a type of Korean food?";
 		itemList.put("kimchi",z);
-		roomList.get("forest2").items.add("kimchi");		
+		roomList.get("forest2").items.add("kimchi");
+		
+		z = new Item("The sign says: \"In a future version of the game, "
+				+ "this room will contain a bunch of equipment to control things."
+				+ "\nFor now, just enjoy the view of the forest from up here.\"");
+		z.descrRoom = "There's a shiny new tourism info sign here.";
+		z.descrRead = z.descrLook;
+		z.isCarryable = false;
+		itemList.put("sign", z);
+		roomList.get("controlRoom").items.add("sign");
 
 	}
 
