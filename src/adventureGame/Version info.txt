@@ -1,6 +1,6 @@
 Version information
 
-v1.9
+v2.0
 DONE:
   flashlight
   treasure door

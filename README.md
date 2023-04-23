@@ -1,8 +1,8 @@
 # Text Adventure Game
 
-_By Michael Harwood, 2023 (The first version was written in 2014)_
+_By Michael Harwood, 2023 (The first version was written in 2014, but then it sat incomplete for many years)_
 
-### The purpose is to have a game that resembles Zork, which can handle fairly natural language input.
+### The purpose is to have a complex game that resembles Zork, which can handle fairly natural language input.
 
 There are some other, better but more complex, ways of handling language.  This suffices for a high school project.
 

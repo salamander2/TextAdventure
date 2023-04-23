@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-/* Text adventure game by Michael Harwood
- * Version 1.8 
+/* Text adventure game by MH
+ * Version 2.0 
  * Please see "version info.txt" for what works and what doesn't
  * "Language.txt" lists all of the commands that work so far and explains what is supposed to happen with each.
  */
@@ -293,7 +293,7 @@ public class AdventureMain {
 			//activate(word2);
 			break;
 		case "close":
-			if (word2=="") {
+			if (word2.equals("")) {
 				System.out.println("close what?");				
 			} else {
 				closeObject(word2);
@@ -303,7 +303,7 @@ public class AdventureMain {
 			//SPECIAL COMMANDS
 			//get this working for open paper and open package
 		case "open":
-			if (word2=="") {
+			if (word2.equals("")) {
 				System.out.println("open what?");				
 			} else {
 				openStuff(word2, word3, word4);
@@ -448,7 +448,7 @@ public class AdventureMain {
 	}
 
 	void readItem(String itemname) {
-		if (itemname == "") {
+		if (itemname.equals("")) {
 			System.out.println("Read what?");
 			return;
 		}
@@ -471,7 +471,7 @@ public class AdventureMain {
 
 	
 	void cutItem(String itemname) {
-		if (itemname == "") {
+		if (itemname.equals("")) {
 			System.out.println("Cut what?");
 			return;
 		}
@@ -697,7 +697,7 @@ public class AdventureMain {
 		s+="    .......[2]$$$$$$$                    \n";
 		s+="            ^                            \n";
 		s+="            ^                            \n";
-		s+="     down tree (otherside)               \n\n";
+		s+="    down from tree (otherside)             \n\n";
 
 		System.out.println(s);
 	}
