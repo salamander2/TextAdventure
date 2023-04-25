@@ -16,3 +16,7 @@ Some elegant features of the way that this game is designed:
 4. It is incredibly easy to add new commands.  
 However: all of the commands end up in one large switch statement, eventually it might be better to find some other data structure.
 5. Rooms and items can have custom methods that run when they are accessed. This allows much more fine tuning of the game. 
+
+------------
+
+I've come the limit of my knowledge of how to make this more efficient and streamlined. The giant case statement and the proliferation of special methods is now cumbersome.  Asking online for advice gave me this resource: https://www.youtube.com/watch?v=JxI3Eu5DPwE  So I can now look up Composition design pattern.
